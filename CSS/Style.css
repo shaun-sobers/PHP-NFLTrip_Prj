@@ -3,7 +3,9 @@
   background-color: #333;
   overflow: hidden;
 }
-
+.teamLogo{
+    border-radius: 50%;
+}
 /* Style the links inside the navigation bar */
 .topnav a {
   float: left;
@@ -35,16 +37,25 @@
     color:red;
 }
 .infocustomer {
-    width: 50%;
-    float: right;
+    width: 50;
+    float: left;
     padding: 20px;
     border: 2px solid white;
 }
 .infoteam{
-        width: 50%;
+    width: 50%;
     float: left;
     padding: 20px;
     border: 2px solid white;
+}
+.footerdiv{
+    float:bottom;
+        border: 3px solid #fff;
+    padding: 20px;
+}
+.specialAd{
+    max-width: 100%;
+    border:5px solid red;
 }
 .infodiv {
     border: 3px solid #fff;
@@ -55,19 +66,18 @@
     color: white;
 }
 .Atlanta{
-color: red;
+color: #a71930;
 background-color: black;
-width: 100%;
+
 }
 
-
 .Arizona{
-    background-color: red;
+    background-color: #97233F;
     color: black;
 }
 .Baltimore{
-    background-color: black;
-        color: purple;
+    background-color: #241773;
+        color: black;
 }
 .Bufallo{
         color: #00338D;

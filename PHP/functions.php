@@ -76,12 +76,15 @@ function createNavBar()
 
 #create the page footer and close html tag
 function createPageFooter(){
-    showAdvertisment();
+    ?>
+<div class="footerdiv">
+    <?php showAdvertisment();
     ?>
         <br><br>
     
         <footer>Copyright &copy; Shaun "SobZ" Sobers (193337) <?php echo date("Y"); ?>
         </footer>    
+</div>
 </body>
 </html>
 <?php
@@ -91,7 +94,7 @@ function createPageFooter(){
 //Creating a function that displays the Team Logo of the selected Team from combo box
 function showTeamImage($team)
 {
-echo "<img src='Images/NFL-Teams/!" .$team.".png'><br><br>";
+echo "<img src='Images/NFL-Teams/!" .$team.".png'class='teamLogo'><br><br>";
 }
 
 
@@ -159,7 +162,7 @@ function showPurchaseOptions($team){
 </div>
             
             
-            !<!-- Creating a div which contains the Schedule options -->
+            <!-- Creating a div which contains the Schedule options -->
 <div id="dvSchedule" style="display: none">
     <?php 
         //Calling the Team Calender function which will create and display the team schedule in a table
@@ -172,6 +175,7 @@ function showPurchaseOptions($team){
 
 <!-- Creating a div that contain the Jersey options -->
 <div id="dvJersey" style="display: none">
+    <br>
      <label for="jersey">Select A Jersey Size:</label>
         
         <!-- Creates a drop box which allows you to select a jersey size -->
@@ -459,7 +463,7 @@ $quantity="";
 
 </div>
 
-
+</div>
         
  
  <?php
@@ -519,7 +523,8 @@ $Team="";
     if(isset($_POST['submit'])){
     if(!empty($_POST['Football'])) {
         $Team = $_POST['Football'];
-?>
+        ?><div class="conttent">
+            <div class="infoteam">
          <div class="<?php echo $Team; ?> ">
 <?php 
             echo 'You have chosen:('. $Team.')';
@@ -529,6 +534,7 @@ $Team="";
         showPurchaseOptions($Team);
 ?>   
         </div>
+            </div>
 <?php
     } else {
         echo 'Please select A team.';
@@ -609,8 +615,13 @@ $Team="";
 $ads = array(DICKS_LOGO, FOOTLOCKER_LOGO, NIKE_LOGO);
 
 shuffle($ads);
-        
-echo "<img src='" .$ads[0]. "'>";
+
+if ($ads[0]== NIKE_LOGO){
+    echo "<img src='" .$ads[0]. "' class='specialAd'>";
+}else{
+    echo "<img src='" .$ads[0]. "'>";
+}
+
 }
  
 function computeTaxes($amount){
