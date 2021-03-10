@@ -14,12 +14,7 @@ require_once FILE_PHP_FUNCTIONS;
  
 
 #Createing header
-?>
-
-<?php
 createPageHeader("HomePage");
 createPageFooter();
-
 ?>
 
-</html>

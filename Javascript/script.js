@@ -1,8 +1,8 @@
-<script type="text/javascript">
     function ShowHideTickets(chkOption) {
         var dvOption = document.getElementById("dvSchedule");
         dvOption.style.display = chkOption.checked ? "block" : "none";
     }
+    
         function ShowHideJersey(chkOption) {
         var dvOption = document.getElementById("dvJersey");
         dvOption.style.display = chkOption.checked ? "block" : "none";
@@ -15,4 +15,3 @@
         var dvOption = document.getElementById("dvTailGate");
         dvOption.style.display = chkOption.checked ? "block" : "none";
     }
-</script>

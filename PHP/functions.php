@@ -5,9 +5,12 @@ define("FILE_CSS", FOLDER_CSS."Style.css");
 define("FOLDER_PHP", "PHP/");
 define("FILE_PHP_FUNNCTION", FOLDER_PHP."functions.php");
 define("FOLDER_JAVASCRIPT", "Javascript/");
-define("FILE_JAVASCRIPT", FOLDER_JAVASCRIPT."Script.php");
+define("FILE_JAVASCRIPT", FOLDER_JAVASCRIPT."script.js");
 define("FOLDER_IMAGE","Images/");
 define("SOBZ_LOGO", FOLDER_IMAGE."Sobz-Sports-Logo.png");
+define("FOOTLOCKER_LOGO", FOLDER_IMAGE."Footlocker-Logo.png");
+define("DICKS_LOGO", FOLDER_IMAGE."Dicks-Logo.png");
+define("NIKE_LOGO", FOLDER_IMAGE."Nike.png");
 define("FOOTBALL_BACKGROUND", FOLDER_IMAGE."Football-Player.jpg");
 define("NFL_IMAGES", FOLDER_IMAGE."NFL-TEAMS/");
 define("IMAGE_NFL_LOGO", NFL_IMAGES."nfl-logo.png");
@@ -19,46 +22,24 @@ define('COMMENT_MAX_LENGTH',200);
 define('PRICE_MAX',10000);
 define('QUANTITY_MAX',99);
 define('QUANTITY_MIN',0);
+define ("AMOUNT_NUMBER_OF_DECIMAL", 2);
+define ("TAX_RATE", 12.05);
 
-
-
-global $firstName;
-global $lastName;
-global $productCode;
-global $city;
-global $comments;
-global $price;
-global $quantity;
-
-global $errorFname;
-global $errorLname;
-global $errorCode;
-global $errorCity;
-global $errorComments;
-global $errorPrice;
-global $errorQuantity;
-
-$color="Hello";
-$selected="";
-
-
-
-$bgcolor="";
 #open the Doctype and create page header
 function createPageHeader($title){
-    createNavBar()
     ?>
 <!DOCTYPE html>
-
 <html>
     <head>
+        <!-- Linking the files from other pages -->
         <link rel="stylesheet" type="text/css" href="<?php echo FILE_CSS ?>">
-         <script src="<?php echo FILE_JAVASCRIPT ?>"></script> 
+        <script language="javascipt" type="text/javascript" src="<?php echo FILE_JAVASCRIPT ?>"></script> 
         <meta charset="UTF-8">
         <title><?php echo $title ?></title>
+         <?php createNavBar();
+         ?>
     </head>
-    <body class="background">
-        <p style="color: white">Hello Welcome</p>
+    <body class="bodybackground">
 
     
     <?php
@@ -67,93 +48,107 @@ function createPageHeader($title){
 function createNavBar()
 {
     ?>
-<div class="navbar">
+<!--<div class="navbar">
    <div id="navbar-brand">
-    <img src="<?php echo IMAGE_NFL_LOGO ?>">
+    <img src="
     <button id="html"><span id="htmltxt" onclick="window.location.href='ShopPage.php'" >Shop</span></button>
   <button id="css"><span id="htmltxt">About Us</span></button>
-  <button id="JS"><span id="htmltxt"onclick="window.location.href='ShopPage.php'">Contact Us</span></button>
- 
-  <img src="<?php echo SOBZ_LOGO ?>">
-    
+  <button id="JS"><span id="htmltxt" onclick="window.location.href='ShopPage.php'">Contact Us</span></button>
+  <img src="
 </div>
-<br></br>
+<br><br>
 <div id="container">
-  <h1></h1>
 </div>
+</div>-->
+
+<!-- Creating a div which contains the Navigation Bar and Website Logo  -->
+<div class="topnav" id="myTopnav">
+    <img src="<?php echo IMAGE_NFL_LOGO ?>">
+  <a href="#home" onclick="window.location.href='index.php'" class="active">Home</a>
+  <a href="#home" onclick="window.location.href='ShopPage.php'">Shop</a>
+<a href="#home" onclick="window.location.href='OrderPage.php'">Orders</a>
+<img src="<?php echo SOBZ_LOGO ?>"> 
+</div>
+
+
 <?php
 }
 
 #create the page footer and close html tag
 function createPageFooter(){
-  // echo "<br><br>Copyright SobZ " .date("Y");
+    showAdvertisment();
     ?>
         <br><br>
-        </body>
+    
         <footer>Copyright &copy; Shaun "SobZ" Sobers (193337) <?php echo date("Y"); ?>
-        </footer>
+        </footer>    
+</body>
 </html>
 <?php
 }
-function createComboBox($teams)
-{
-    $bgcolor="";
-    echo "<select name='teams' id='teams-select'>";
-    for($index=0; $index< count($teams); $index++)
-    {
-        echo "<option>$teams[$index]</option>";
-    }
-    echo "</select>";
-   
-    
-
-}
 
 
+//Creating a function that displays the Team Logo of the selected Team from combo box
 function showTeamImage($team)
 {
-echo "<img src='Images\NFL-Teams\!" .$team.".png'><br><br>";
+echo "<img src='Images/NFL-Teams/!" .$team.".png'><br><br>";
 }
 
+
+// Creating a function that displays the Team Jersey of the selected Team from combo box
 function showTeamJersey($team)
 {
-echo "<img src='Images\NFL-Jerseys\!" .$team.".jpeg'>";
+echo "<img src='Images/NFL-Jerseys/!" .$team.".jpeg'>";
 }
 
+
+// Creating a function that creates the purchase options, with a parameter of the Selected team, which changes the color scheme to the Selected Teams colors
 function showPurchaseOptions($team){
     ?>
-
-
+            <br>        
             <br>
-            
-<br>
+            <!-- Creating a Checkbox with the purchase options -->
 <label class="container" id="Options">Game Ticket
+        <!-- On click, it will trigger a Javascript option which will open and close the div containing the Game Ticket options -->
            <input type="checkbox" id="chkOption" onclick="ShowHideTickets(this)" /> 
-      <span class="checkmark"></span>
-    </label>
+           <span class="checkmark"></span>
+</label>
 
+            
 <label class="container" id="Options">Jersey
+    <!-- On click, it will trigger a Javascript option which will open and close the div containing the Jersey options -->
            <input type="checkbox" id="chkOption" onclick="ShowHideJersey(this)" /> 
-      <span class="checkmark"></span>
-    </label>
+           <span class="checkmark"></span>
+</label>
 
 <label class="container" id="Options">Housing
+        <!-- On click, it will trigger a Javascript option which will open and close the div containing the Housing options -->
            <input type="checkbox" id="chkOption" onclick="ShowHideHousing(this)" /> 
-      <span class="checkmark"></span>
-    </label>
+           <span class="checkmark"></span>
+</label>
 
 <label class="container" id="Options">TailGating
+        <!-- On click, it will trigger a Javascript option which will open and close the div containing the TailGaiting options -->
            <input type="checkbox" id="chkOption" onclick="ShowHideTailGate(this)" /> 
-      <span class="checkmark"></span>
-    </label>
+          <span class="checkmark"></span>
+</label>
+            
+           
+            
+            
+            <!-- Creating a div which contains the housing options -->
 <div id="dvHousing" style="display: none">
     <br><br><label>Would you like to stay alone, or split a room with someone else</label><br><br>
-<input type="radio" id="alone" name="housing" value="Alone">
-<label for="alone">Alone</label><br>
-<input type="radio" id="share" name="housing" value="Share Room">
-<label for="share">Share room with another</label><br>
+    
+    <!-- Creating radio buttons to select your Housing choice -->
+    <input type="radio" id="alone" name="housing" value="Alone">
+        <label for="alone">Alone</label><br>
+    <input type="radio" id="share" name="housing" value="Share Room">
+        <label for="share">Share room with another</label><br>
 </div>
 
+            
+            <!-- Creating a div which contains your Tailgait options -->
 <div id="dvTailGate" style="display: none">
     <br><br>
     TailGate Package includes:
@@ -162,37 +157,48 @@ function showPurchaseOptions($team){
     <br>- Unlimited drinks
 <br><br>
 </div>
-
-<hr />
+            
+            
+            !<!-- Creating a div which contains the Schedule options -->
 <div id="dvSchedule" style="display: none">
-<?php 
-    //teamSchedule($team)
-    teamCalender($team);
-?>
+    <?php 
+        //Calling the Team Calender function which will create and display the team schedule in a table
+            teamCalender($team);
+    ?>
 </div>
+            
+            
 <br><br>
-<div id="dvJersey" style="display: none">
- <label for="jersey">Select A Jersey Size:</label>
 
-<select name="jersey" id="cars">
-  <option value="extraSmall">Extra Small</option>
-  <option value="small">Small</option>
-  <option value="medium">Medium</option>
-  <option value="large">Large</option>
-  <option value="extaLarge">Extra Large</option>
-</select> 
- <br>
- <br>
- <?php
-showTeamJersey($team);?>
- <br><br>
+<!-- Creating a div that contain the Jersey options -->
+<div id="dvJersey" style="display: none">
+     <label for="jersey">Select A Jersey Size:</label>
+        
+        <!-- Creates a drop box which allows you to select a jersey size -->
+            <select name="jersey" id="cars">
+                <option value="extraSmall">Extra Small</option>
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+                <option value="extaLarge">Extra Large</option>
+            </select> 
+        <br>
+        <br>
+    <?php
+        // Calls the function which displays the Selected Teams Jersey image
+                    showTeamJersey($team)
+    ;?>
+        <br>
+        <br>
 </div>
 
-            <?php
+<?php
 }
 
+// Creats a function the displays the team schedule within a table
 function teamCalender($team){
 
+    // This creates an array which contains all the available NFL teams
     $teams = array('Arizona Cardinals',
 'Atlanta Falcons',
 'Baltimore Ravens',
@@ -226,9 +232,15 @@ function teamCalender($team){
 'Tennessee Titans',
 'Washington Redskins');
 
+    
+    // This creates an array which contains home and away options for the schedule
 $stadium = array('Home','Away','Home','Away','Home','Away','Home','Away','Home','Away','Home','Away','Home','Away','Home','Away','Home');
+
+//  This shuffles the Team and Stadium arrays, which will create a random schedule for the schedule table
 shuffle($teams);
 shuffle($stadium);
+
+    // Creates the tables, which has the variable of the selected team to be displayed in the header of the table
         echo  "<table class='$team'><br><tr>";
 	echo "<caption> $team  Schedule</caption>";
         echo 	"<thead>
@@ -240,13 +252,15 @@ shuffle($stadium);
 	</tr>
 	</thead>";
     
-
+// A for loop which creates the schedule. The number 17 was chosen because there is 17 weeks in a NFL Season, so this will make a random scheudule of 17 weeks
      for($index=1; $index< 17; $index++)
     {
         echo "<th>$index</th>";
         echo"<th>$stadium[$index]</th>";
         echo"<th>$teams[$index]</th>";
-        ?>  <td>
+        ?> 
+    <!-- Creates radio button which allows you to select only 1 game for your purchase -->
+            <td>
                  <div class="radio">
                      <input type="radio" name="purchase" id="<?php $index?>">
                  </div>
@@ -254,6 +268,7 @@ shuffle($stadium);
 <?php
         echo "</tr>";
     }
+    // This closes the table tag once the for loop is complete
     echo "</table>";
 
     
@@ -261,24 +276,31 @@ shuffle($stadium);
  function CustomerInfoDiv ($team){
 ?>
             <?php
+
+// Initializing the variables used within the Customer Info form
+global $firstName;
+global $lastName;
+global $productCode;
+global $city;
+global $comments;
+global $price;
+global $quantity;
+
+global $errorFname;
+global $errorLname;
+global $errorCode;
+global $errorCity;
+global $errorComments;
+global $errorPrice;
+global $errorQuantity;
+
+
+//This checks if the submitinfo object has be altered
                if(isset($_POST["submitinfo"])){
 
-$firstName="";
-$lastName="";
-$productCode="";
-$city="";
-$comments="";
-$price="";
-$quantity="";
 
-$errorFname="";
-$errorLname= "";
-$errorCode= "";
-$errorCity="";
-$errorComments="";
-$errorPrice="";
-$errorQuantity="";
-        
+
+// This takes the information stored within the object and saves it into a variable, which stops the user from doing any HTML injections or hacking.
 $firstName=htmlspecialchars(trim($_POST['FirstName']));
 $lastName= htmlspecialchars(trim($_POST['LastName']));
 $productCode=htmlspecialchars(trim($_POST['ProductCode']));
@@ -287,12 +309,17 @@ $comments=htmlspecialchars(trim($_POST['Comments']));
 $price=htmlspecialchars(trim($_POST['Price']));
 $quantity=htmlspecialchars(trim($_POST['Quantity']));
 
-        if($productCode == ''){
+
+        // Validations for all fields within the form
+        if($productCode == ""){
             $errorCode = "The product code cannot be empty";
         }
         else{
             if(mb_strlen($productCode) > PRODUCT_CODE_MAX_LENGTH){
                 $errorCode = "The make cannot cantain more than ".PRODUCT_CODE_MAX_LENGTH." characters";
+            }
+            if (substr($productCode, 0,1) != "P" && substr($productCode, 0,1) != "p"){
+                $errorCode= "The first letter must be P";
             }
         }
         
@@ -348,9 +375,13 @@ $quantity=htmlspecialchars(trim($_POST['Quantity']));
             }
         }
         
-        if ($errorFname == "" && $errorLname== "" && $errorCity == "" && $errorCode == "" && $errorComments == "" && $errorPrice == "" && $errorQuantity == "" && $errorYear == "")
+        // This checks if the error messages are empty... If all error messages are empty, this means the infomration entered was valid, and we can proceed to next step
+        if ($errorFname == "" && $errorLname== "" && $errorCity == "" && $errorCode == "" && $errorComments == "" && $errorPrice == "" && $errorQuantity == "")
         {
-        # no errors occured
+        // This calls the function which gathers all the information from the form, and stores it into a json string
+        saveRecord($firstName, $lastName, $city, $productCode, $comments, $price, $quantity);
+        
+// This clears the variables
 $firstName="";
 $lastName="";
 $productCode="";
@@ -359,44 +390,268 @@ $comments="";
 $price="";
 $quantity="";
 
-            
-            echo "Congats !! You purchased a new car !!<br><br>";
+            // Confirmation message once there is no errors after submission
+            echo "Congats !! You purchased a package !!<br><br>";
+           
         }
                }
  ?>  
- <div class="<?php echo $team; ?> ">
- <form action="ShopPage.php" method='POST'>
-<label>Customer Information</label>
-<br><br><br>
-Product Code:
-<input type="text"name="ProductCode"/><br><br>
-<span style="color:red"><?php echo $errorCode; ?></span>
-First Name:
-<input type="text"name="FirstName"/><br><br>
-<span style="color:red"><?php echo $errorFname; ?></span>
-Last Name:
-<input type="text"name="LastName"/><br><br>
-<span style="color:red"><?php echo $errorLname ?></span>
-Customer City:
-<input type="text"name="City"/><br><br>
-<span style="color:red"><?php echo $errorCity ?></span>
-Comments:
-<input type="text"name="Comments"/><br><br>
-<span style="color:red"><?php echo $errorComments ?></span>
-Price:
-<input type="text"name="Price"/><br><br>
-<span style="color:red"><?php echo $errorPrice ?></span>
-Quantity:
-<input type="text"name="Quantity"/><br><br>
-<span style="color:red"><?php echo $errorQuantity ?></span>
-<input name="submitinfo" type="submit"/><br><br>
-</p>
-</form>
+<div class="infocustomer">
+            
+    <!-- Creating a form for the customer information -->
+    <form class="<?php echo $team;?>"  action="ShopPage.php" method='POST'>
+        <label>Customer Information</label>
+          <br><br><br>
+          
+          <!-- Section for the Product code, if error occurs span area will produce and show error Message -->
+            <div style="color:red">*</div>
+            Product Code:
+                <input type="text" name="ProductCode" /><br>
+                    <span style="color:red"><?php echo $errorCode; ?></span><br><br>
+                    
+              
+            <!-- Section for the First name, if error occurs span area will produce and show error Message -->        
+            <div style="color:red">*</div>
+            First Name:
+               <input type="text" name="FirstName"/><br>
+                    <span style="color:red"><?php echo $errorFname; ?></span><br><br>
+                    
+                
+            <!-- Section for the Last name, if error occurs span area will produce and show error Message -->
+            <div style="color:red">*</div>
+            Last Name:
+               <input type="text" name="LastName"/><br>
+                    <span style="color:red"><?php echo $errorLname ?></span><br><br>
+                    
+                    
+            <!-- Section for the city, if error occurs span area will produce and show error Message -->
+            <div style="color:red">*</div>
+            Customer City:
+                <input type="text" name="City"/><br>
+                    <span style="color:red"><?php echo $errorCity ?></span><br><br>
+                    
+           <!-- Section for the Comments, if error occurs span area will produce and show error Message -->   
+            Comments:
+                <input type="text" name="Comments"/><br>
+                    <span style="color:red"><?php echo $errorComments ?></span><br><br>
+                    
+               
+             <!-- Section for the price, if error occurs span area will produce and show error Message -->
+            <div style="color:red">*</div>
+            Price:
+                <input type="text" name="Price"/><br>
+                    <span style="color:red"><?php echo $errorPrice ?></span><br><br>
+                    
+             
+            <!-- Section for the Quantity, if error occurs span area will produce and show error Message -->        
+            <div style="color:red">*</div>
+            Quantity:
+                <input type="text" name="Quantity"/><br>
+                    <span style="color:red"><?php echo $errorQuantity ?></span><br><br>
+                   
+                    
+            <!-- Section for the legend, which shows Which sections must not be empty -->
+            <div style="color:red">* = required</div>
+ 
+            <!-- This is the submit button -->
+            <input name="submitinfo" type="submit" value="Confirm Information"/><br><br>
+    </form>
 
-            </div>
+</div>
+
 
         
  
  <?php
  
  }
+ 
+// This function is a combo box , that takes the users selection, and changes the background and color scheme of other divs
+ function TeamSelect(){
+     ?>
+     
+     <!-- This is a form with all the 32 NFL team as options -->
+        <form action="" method="post">
+            <select name="Football">
+                <option value="" disabled selected>Choose option</option>
+                <option value="Arizona">Arizona Cardinals</option>
+                <option value="Atlanta">Atlanta Falcons</option>
+                <option value="Baltimore">Baltimore Ravens</option>
+                <option value="Bufallo">Buffalo Bills</option>
+                <option value="Carolina">Carolina Panthers</option>
+                <option value="Chicago">Chicago Bears</option> 
+                <option value="Cincinnati">Cincinnati Bengals</option> 
+                <option value="Cleveland">Cleveland Browns</option> 
+                <option value="Dallas">Dallas Cowboy</option> 
+                <option value="Denver">Denver Broncos</option> 
+                <option value="Detroit">Detroit Lions</option> 
+                <option value="GreenBay">Green Bay Packers</option> 
+                <option value="Houston">Houston Texans</option> 
+                <option value="Indianapolis">Indianapolis Colts</option> 
+                <option value="Jacksonville">Jacksonville Jaguars</option> 
+                <option value="KansasCity">Kansas City Chiefs</option> 
+                <option value="LasVegas">Las Vegas Raiders</option> 
+                <option value="LAChargers">Los Angeles Chargers</option> 
+                <option value="LARams">Los Angeles Rams</option> 
+                <option value="Miami">Miami Dolphins</option> 
+                <option value="Minnesota">Minnesota Vikings</option> 
+                <option value="NewEngland">New England Patriots</option> 
+                <option value="NewOrleans">New Orleans Saints</option> 
+                <option value="NewYorkGiants">New York Giants</option> 
+                <option value="NewYorkJets">New York Jets</option> 
+                <option value="Philadelphia">Philadelphia Eagles</option> 
+                <option value="Pittsburgh">Pittsburgh Steelers</option> 
+                <option value="SanFrancisco">San Francisco 49ers</option> 
+                <option value="Seattle">Seattle Seahawks</option> 
+                <option value="TampaBay">Tampa Bay Buccaneers</option> 
+                <option value="Tennesse">Tennessee Titans</option> 
+                <option value="Washington">Washington Redskins</option> 
+            </select>
+
+        <input type="submit" name="submit" value="Select A Team">
+</form>
+  <?php
+
+  
+//Declaration of team variable           
+$Team="";
+
+    if(isset($_POST['submit'])){
+    if(!empty($_POST['Football'])) {
+        $Team = $_POST['Football'];
+?>
+         <div class="<?php echo $Team; ?> ">
+<?php 
+            echo 'You have chosen:('. $Team.')';
+        
+            showTeamImage($Team);
+    
+        showPurchaseOptions($Team);
+?>   
+        </div>
+<?php
+    } else {
+        echo 'Please select A team.';
+    }
+ }
+ return $Team;
+ ?>
+        <?php
+ }
+ 
+ function saveRecord($fname,$lname,$city,$code,$comment, $price, $quantity){
+        $myfilehandle = fopen("purchases.txt", "a") or die("The file could not be opened");
+        $taxes= computeTaxes($price);
+        $subtotal = calculateSubtotal($price,$quantity);
+        $total= calculateTotal($subtotal,$taxes);
+        $customer = array($code,$fname,$lname,$city,$comment,$price,$quantity,$subtotal, $taxes, $total);
+       $jsoncustomer= json_encode($customer);
+//        $label = array("Product Code","First Name","Last Name","City","Comments","Price", "Quantity","Subtotal", "Taxes", "Total");
+//        
+//        for($index=0; $index< count($customer); $index++){
+//            fwrite ($myfilehandle, $label[$index].": ".$customer[$index]."\r\n");
+//        }
+        fwrite ($myfilehandle,$jsoncustomer);
+        fwrite ($myfilehandle, "\r\n");
+        fclose($myfilehandle);
+        echo "It worked";
+        
+ } 
+ 
+ function printRecord(){
+     $command="";
+             $fileHandle = fopen("purchases.txt", "r") or exit("Unable to open the file");
+                     echo  "<table>";
+        echo 	"<thead><tr>
+            <th>Product Code</th>
+		<th>First Name</th>
+		<th>Last Name<br></th>
+		<th>City</th>
+                <th>Comments</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th>Taxes</th>
+                <th>Grand Total<th>
+	</tr>
+	</thead>
+        <tr>";
+             
+             while (!feof($fileHandle))
+        {
+            $line= fgets($fileHandle);
+            $client = substr($line, 1,-1);
+            $info= explode(",",$client);
+            
+            echo"<tr>";
+            
+        for($index= 0; $index< count($info); $index++){
+            $information= $info[$index];
+            $pos= substr($information, 1,-1);
+            if($index<7){
+            echo "<td>$pos</td>";
+        }
+        else {
+            echo "<td> $ $information</td>";
+        }
+        }
+        echo"<tr/>";
+        }
+    echo "</table>";
+
+        
+        fclose($fileHandle);
+        
+ }
+ 
+ function showAdvertisment()
+{
+$ads = array(DICKS_LOGO, FOOTLOCKER_LOGO, NIKE_LOGO);
+
+shuffle($ads);
+        
+echo "<img src='" .$ads[0]. "'>";
+}
+ 
+function computeTaxes($amount){
+            
+$taxRate= TAX_RATE;
+            $taxAmount= $amount * $taxRate /100;
+            $total=  $taxAmount +$amount;
+            
+            
+            return round($total, AMOUNT_NUMBER_OF_DECIMAL);
+}
+        
+function  calculateSubtotal($price,$quantity){
+
+    return ($price*$quantity);
+}
+function calculateTotal($subtotal, $taxes){
+            return $subtotal+$taxes;
+        }
+            
+        function checkCommand(){
+            $command="";
+                            if(isset($_GET["command"])){
+            $command = htmlspecialchars($_GET["command"]);
+            
+        if($command == "print" || $command== "Print"){
+            $command= "print";
+        }
+        else {
+        if($command == "color"){
+            $color = "blue";
+        }else {
+            $color = "text-black";
+        }
+        }
+        }
+                ?>
+                <div class="<?php echo $command; ?> ">
+                    <?php                               printRecord();?>
+                </div>
+            
+            
+            <?php
+        }
