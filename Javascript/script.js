@@ -15,3 +15,7 @@
         var dvOption = document.getElementById("dvTailGate");
         dvOption.style.display = chkOption.checked ? "block" : "none";
     }
+            function function_alert() { 
+              
+           alert('Your message Here'); 
+        } 

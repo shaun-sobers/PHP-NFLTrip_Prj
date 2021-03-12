@@ -24,6 +24,7 @@ define('QUANTITY_MAX',99);
 define('QUANTITY_MIN',0);
 define ("AMOUNT_NUMBER_OF_DECIMAL", 2);
 define ("TAX_RATE", 12.05);
+define ("SPECIAL_AD", NIKE_LOGO);
 
 #open the Doctype and create page header
 function createPageHeader($title){
@@ -102,6 +103,11 @@ echo "<img src='Images/NFL-Teams/!" .$team.".png'class='teamLogo'><br><br>";
 function showTeamJersey($team)
 {
 echo "<img src='Images/NFL-Jerseys/!" .$team.".jpeg'>";
+}
+
+function showTeamName($team)
+{
+echo "<img src='Images/Team-Name/" .$team.".png'>";
 }
 
 
@@ -198,7 +204,17 @@ function showPurchaseOptions($team){
 
 <?php
 }
-
+// This function creates the about Us paragraph which is displayed on the homepage
+function aboutUs(){
+    ?>
+    <div class="about-section">
+  <h1>About Us Page</h1>
+  <p>Sobz is a sporting goods company, which sells Game Packages. </p>
+  <p>These packages include GameTickets, Jerseys, Tailgating Access, as well as a place for you to stay through your trip.</p>
+  <p>This allows you to take off all the stress of planning within a click of a second</p>
+</div>
+<?php
+}
 // Creats a function the displays the team schedule within a table
 function teamCalender($team){
 
@@ -508,7 +524,7 @@ $quantity="";
                 <option value="SanFrancisco">San Francisco 49ers</option> 
                 <option value="Seattle">Seattle Seahawks</option> 
                 <option value="TampaBay">Tampa Bay Buccaneers</option> 
-                <option value="Tennesse">Tennessee Titans</option> 
+                <option value="Tennessee">Tennessee Titans</option> 
                 <option value="Washington">Washington Redskins</option> 
             </select>
 
@@ -520,14 +536,16 @@ $quantity="";
 //Declaration of team variable           
 $Team="";
 
+//Checking if the submit variable has been set
     if(isset($_POST['submit'])){
     if(!empty($_POST['Football'])) {
         $Team = $_POST['Football'];
-        ?><div class="conttent">
+        ?><div class="content">
             <div class="infoteam">
          <div class="<?php echo $Team; ?> ">
 <?php 
-            echo 'You have chosen:('. $Team.')';
+            echo 'You have chosen: ('.$Team.')';
+            showTeamName($Team);
         
             showTeamImage($Team);
     
@@ -537,7 +555,7 @@ $Team="";
             </div>
 <?php
     } else {
-        echo 'Please select A team.';
+       echo '<script>alert("Please select a team")</script>'; 
     }
  }
  return $Team;
@@ -545,6 +563,7 @@ $Team="";
         <?php
  }
  
+ // This function saves all the records from the form, encodes them with JSON, and stores them within the purchase.txt file.
  function saveRecord($fname,$lname,$city,$code,$comment, $price, $quantity){
         $myfilehandle = fopen("purchases.txt", "a") or die("The file could not be opened");
         $taxes= computeTaxes($price);
@@ -564,16 +583,20 @@ $Team="";
         
  } 
  
+ // This function takes the content of purchase.txt, and prints them within the table using a for loop;
+ // While also checking if the variable command was used, and if it was, does certain actions accordingly
  function printRecord(){
+
      $command="";
+     $commandColor="";
              $fileHandle = fopen("purchases.txt", "r") or exit("Unable to open the file");
-                     echo  "<table>";
+                     echo  "<table border='1'>";
         echo 	"<thead><tr>
             <th>Product Code</th>
 		<th>First Name</th>
 		<th>Last Name<br></th>
 		<th>City</th>
-                <th>Comments</th>
+                <th>Comments\t\t</th>
                 <th>Price</th>
                 <th>Quantity</th>
                 <th>Subtotal</th>
@@ -590,7 +613,6 @@ $Team="";
             $info= explode(",",$client);
             
             echo"<tr>";
-            
         for($index= 0; $index< count($info); $index++){
             $information= $info[$index];
             $pos= substr($information, 1,-1);
@@ -598,32 +620,64 @@ $Team="";
             echo "<td>$pos</td>";
         }
         else {
+            if($index==7){
+            if($information<100){
+                  $color= "red";
+            }if($information>= 100 && $information<1000){
+                $color= "yellow";
+            }if ($information>=1000){
+                $color= "green";
+            }
+            echo "<td class='".$commandColor."'> $ $information</td>";
+        }else
             echo "<td> $ $information</td>";
         }
         }
         echo"<tr/>";
         }
     echo "</table>";
-
+    
+                            if(isset($_GET["command"])){
+            $command = htmlspecialchars($_GET["command"]);
+            
+        if($command == "print" || $command== "Print"){
+            $command= "print";
+        }
+        else {
+        if($command == "color"){
+            if($color== "red"){
+              $commandColor = "red";
+              echo '<script>alert("'.$commandColor.'")</script>';
+            }if($color=="yellow"){
+                $commandColor= "yellow";
+            }if($color== "green"){
+                $commandColor= "green";
+            }
+        }
+        }
+        }
         
         fclose($fileHandle);
         
  }
  
+ // This function takes array with Advertisment Logos, and randomly shuffles, and displays one in the footer tag of the page.
+ // If the nike Logo is selected, it changes the class which changes the size, and adds a red border around the photo
  function showAdvertisment()
 {
 $ads = array(DICKS_LOGO, FOOTLOCKER_LOGO, NIKE_LOGO);
 
 shuffle($ads);
 
-if ($ads[0]== NIKE_LOGO){
-    echo "<img src='" .$ads[0]. "' class='specialAd'>";
+if ($ads[0]== SPECIAL_AD){
+   echo "<a href='https://nike.ca'><img src='" .$ads[0]. "' class='specialAd' /></a>";
 }else{
-    echo "<img src='" .$ads[0]. "'>";
+    echo "<a href='https://collegelasalle.omnivox.ca'><img src='" .$ads[0]. "' /></a>";
 }
 
 }
  
+// This function takes the price and calculates the taxes on that current amount
 function computeTaxes($amount){
             
 $taxRate= TAX_RATE;
@@ -634,10 +688,13 @@ $taxRate= TAX_RATE;
             return round($total, AMOUNT_NUMBER_OF_DECIMAL);
 }
         
+// this function takes the price, and the quantitify and calculates the subtotal
 function  calculateSubtotal($price,$quantity){
 
     return ($price*$quantity);
 }
+
+// This function takes the subtotal, and the taxes and computes the total price of the purchase
 function calculateTotal($subtotal, $taxes){
             return $subtotal+$taxes;
         }
@@ -649,15 +706,8 @@ function calculateTotal($subtotal, $taxes){
             
         if($command == "print" || $command== "Print"){
             $command= "print";
-        }
-        else {
-        if($command == "color"){
-            $color = "blue";
-        }else {
-            $color = "text-black";
-        }
-        }
-        }
+                            }}
+
                 ?>
                 <div class="<?php echo $command; ?> ">
                     <?php                               printRecord();?>
@@ -666,3 +716,5 @@ function calculateTotal($subtotal, $taxes){
             
             <?php
         }
+        
+        
