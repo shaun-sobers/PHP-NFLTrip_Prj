@@ -31,6 +31,7 @@ require_once FILE_PHP_FUNCTIONS;
 
 #Createing header
 createPageHeader("HomePage");
+/*echo $funny; */
 
 #Creating the about is paragraph
 aboutUs();
