@@ -3,6 +3,7 @@
   background-color: #333;
   overflow: hidden;
 }
+/* Makes the team logos circular*/
 .teamLogo{
     border-radius: 50%;
 }
@@ -16,6 +17,7 @@
   text-decoration: none;
   font-size: 17px;
 }
+/* This places the text about the website in the middle */
 .about-section{
     text-align: center;
 }
@@ -25,34 +27,29 @@
   color: black;
 }
 
-/* Add an active class to highlight the current page */
-.topnav a.active {
-  background-color: #4CAF50;
-  color: white;
-}
-.table{
-    border: 2px solid red;
-}
-
 /* Hide the link that should open and close the topnav on small screens */
 .topnav .icon {
   display: none;
 } 
+/* makes the tag for the sections that are required red*/
  .requiredinfo{
     color:red;
 }
+/* This was used to separate the sections on the Shop Page, puts a white border around them, and puts them side by side */
 .infocustomer {
     width: 50;
     float: left;
     padding: 20px;
     border: 2px solid white;
 }
+/* This was used to separate the sections on the Shop Page, puts a white border around them, and puts them side by side */
 .infoteam{
     width: 50%;
     float: left;
     padding: 20px;
     border: 2px solid white;
 }
+/* This places the footer on the page, and puts a gray on the top of the div */
 .footerdiv{
     border-top: 2px solid gray;
     clear: both;
@@ -61,18 +58,26 @@
 align-content: center;
 opacity: 50%;
 }
+
+/* This place the red boarder and changes size of the ad which we are selling for double the price */
 .specialAd{
      height:100vh;
     border:5px solid red;
 }
-.infodiv {
-    border: 3px solid #fff;
-    padding: 20px;
-}
+
 .bodybackground{
     background-color: black;
     color: white;
 }
+        /* This makes the image see through if the command is set to print */
+ .printimg
+ {
+    opacity: 0.3;
+    border: 2px solid red;
+    text-align: center;
+}
+
+/* The classes of all the teams, with the team colors */
 .Atlanta{
 color: #a71930;
 background-color: black;
@@ -203,88 +208,12 @@ background-color: black;
                 background-color:#773141;
         color:#FFB612;
 }
+/* this is used to change the background and font color if the command is set to print */
 .print {
   background-color: white;
   color:black;
 }
-
-/*.navbar{
-  border: 4px solid black;
-  width: 100%;
-  height: 40px;
-  position: fixed;
-  background-color:black;
-}
-#navbar-brand{
-  border: 2px solid black;
-  background-color: black;
-  width: 60px;
-  height: 36px;
-}
-img {
-  height:50px;
-  width: 50px;
-  float: left;
-  margin-left: 3px;
-  margin-top: -7px;
-  position: relative;
-}
-#html{
-  border:2px black;
-  background-color:black;
-  width: 150px;
-  height: 42px;
-  float: left;
-  margin-top: -41.5px;
-  margin-left: 14px;
-  padding: auto;
-  
-}
-
-#css {
-  border:2px black;
-  background-color:black;
-  width: 150px;
-  height: 42px;
-  float: left;
-  margin-top: -41.5px;
-  margin-left: 1px;
-}
-#JS{
-  border:2px black;
-  background-color:black;
-  width: 150px;
-  height: 42px;
-  float: left;
-  margin-top: -41.5px;
-  margin-left: 1px;}
-#login{
-  height: 35px;
-  float: right;
-  position: relative;
-  margin-top: -38px;
-  padding-right: 15px;
-
-}
-
-#htmltxt{
-  color: #898989;
-  font-weight: bold;
-  font-size: 16px;
-  font-family: Verdana; 
-}
-#htmltxt:hover{
-  color: #f06a00;
-  font-weight: bold;
-  font-size: 16px;
-  font-family: Verdana;  
-}
-#htmltxt:active{
-  color: red;
-  font-weight: bold;
-  font-size: 16px;
-  font-family: Verdana;  
-}*/
+/* used to change the color of the subtotal in the table depending on the amount */
 .yellow 
 {
     color: yellow;
@@ -297,17 +226,4 @@ img {
 .green{
     color:green;
 }
-.demo {
-		border:1px solid #C0C0C0;
-		border-collapse:collapse;
-		padding:5px;
-}
-.demo th {
-		border:1px solid #C0C0C0;
-		padding:5px;
-		background:#F0F0F0;
-	}
-	.demo td {
-		border:1px solid #C0C0C0;
-		padding:5px;
-        }
+

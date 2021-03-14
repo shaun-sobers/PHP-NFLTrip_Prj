@@ -1,0 +1,180 @@
+- Download Xamp( From apachefriend.org)
+	-Download for Windows ( Not Version 8.0.0)
+	-Click other vesions
+	- If it doesnt work download 7.4.13
+	- When done, do not excecute
+	- Check the checksum to make sure it is not fake.
+	
+
+
+Change the config:
+	-Apache (httpd.conf) : Change the port from 80 to 8088
+	-Apache (httpd-ssl.conf): Change the port from 443 to 4433
+
+
+
+Debugging Variables:
+
+echo $variable  this displays info to the browser
+var dump 	technical info, all info is here
+print_r($variable)	human readable, not all info but it will be much easier to read
+
+
+
+Printing:
+
+"" = If "$" is found, it will search for the variable;
+''= It will display the text EXACTLY as it was written;
+
+
+Variables:
+
+$name= "Shaun";
+strlen($variable) = this will return a number of length of variable 
+
+When you want to varify a user input, use UTF8
+i.e mb_strlen(variable).
+mb stands for multi bytes.
+
+SubStrings:
+
+substr($varaible, index that you want the substring to begin, length of substring)
+position starts at 0, lengths start at 1
+
+
+str_replace(search, replace, complete-string)
+str_ireplace ** is case in
+
+To Convert to number, use one of these 4:
+        (int)
+        (integer)
+        $number = intval("123")
+        settype()
+
+Sorting Arrays:
+
+        indexed arrays
+        sort       indexed array
+        rsort      indexed array reverse alphabetical order
+        
+        
+        assoicative arrays
+        asort      value
+        arsort     value reversed
+        ksort      key
+        krsort     key reversed
+
+
+Adding/ Removing in an array
+
+        #add items dynamically
+        $myIndexedArray[]= "Sherbrooke"; #add a new value
+        array_push($myIndexedArray, "city5", "city6");
+        $myIndexedArray["Bill"]= "Windows 10";
+        
+        #add to an existing array
+        $myIndexedArray[1]= "Montreal";
+        
+        
+        #remove items from an array
+        $removeItem= array_pop($myIndexedArray);    #remove the LAST Element
+        $removeItem = array_shift($myIndexedArray);   #remove the FIRST element
+        #
+        unset($myIndexedArray[0]); #delete an item from an array
+        unset($myIndexedArray["Bill"]);
+
+
+
+	How to escape a charcter
+       // escape a character
+       // precede it with a \
+       // \\ (more with c#)
+       // \"
+       // \'
+
+
+Example:         echo "Welcome to Bob's Website" ;
+      		 echo '\nMy Boss said "Always commit your work"';
+       		 echo 'My boss daid "Bob\'s website is pretty neat \".'
+
+
+
+<?php   <---- This enters PHP
+?>      <------ Leaves PHP/Enter's HTML
+
+another way to show Images in PHP
+
+function createLogo() 
+{
+	echo "<img src=' " . PHOTO_FILE . " ' >";
+
+}
+
+
+Class-Notes:
+
+<?php
+
+?>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+    </head>
+    <body>
+        <?php
+        
+    if(isset($_POST["save"]))
+    {
+        //protect from html injection
+        $firstname = $_POST["firstname"];
+       
+//        echo "<br>Filter #1: Sanitize String: " .
+//                filter_input(INPUT_POST, "firstname", FILTER_SANITIZE_STRING);
+       
+//        echo "<br>Filter #2: Full Sanitize: " .
+//                filter_input(INPUT_POST, "firstname", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+       
+        echo "<br>Filter #3: HTML special chars: " . htmlspecialchars($firstname);
+       
+//        echo "<br>Filter #4: HTML Entities " . htmlentities($firstname);
+       
+//        echo "<br>Filter #5: Validate Email " . filter_input(INPUT_POST, "firstname", FILTER_VALIDATE_EMAIL);
+          
+    echo "<br><br>Welcome " . $firstname;
+    
+    }else 
+        {
+            echo "no name was recieved as a param";
+        }
+        echo "<br><br>";
+
+
+        #Super global variables
+        # $_POST        array containing all the data you POSTED
+        # $_GET        array containing all the data you GET
+        # $_REQUEST        either $_POST or $_GET
+        ?>
+        
+        Please fill-in the fields and click Submit button
+        <form action="index.php" method="POST">
+            <p>
+                <label>First name:</label>
+                <input type="text" name="firstname" />
+            </p>
+            
+            <input type="submit" name="save" value="Save" />
+        </form>
+    </body>
+</html>
+
+
+Revision History:
+
+        #revision history
+        #2021-02-12 Shaun Sobers    Create the PHP About file
+        #2021-02-17 Shaun Sobers    Added the copyright
+        
+
+** POST: ussed by the code only (not in the browser history)
+** GET: used by the code, but also in the URL

@@ -1,4 +1,19 @@
 <?php
+#Revision history:
+
+#DEVELOPER DATE COMMENTS
+#Shaun Sobers (193337) 2021-03-01 Created NetBeans project and empty folders.
+#Shaun Sobers (193337) 2021-03-02 Created Index Page, editting 50% of index page, including css
+#Shaun Sobers (193337) 2021-03-03 Finished the index page, including CSS for index page
+#Shaun Sobers (193337) 2021-03-05 Created Shop Page, with functionalities, added team photos
+#Shaun Sobers (193337) 2021-03-06 Created the Order to check if the table is properly working, created functions to display the table
+#Shaun Sobers (193337) 2021-03-08 Editted functionalities of pages, added more CSS to the Shop Pages
+#Shaun Sobers (193337) 2021-03-09 Completed the shop pages, fixed CSS on homepages, and footers
+#Shaun Sobers (193337) 2021-03-11 Fixed bugs in Table, and Save function, editted Order Page
+#Shaun Sobers (193337) 2021-03-13  Fixed table , and Command functions on Order Page, fixed error in Compute Taxes function, fixed CSS on Index, Shop and Order Page, added more comments, changed project name to student id number
+#Shaun Sobers (193337) 2021-03-13 Completed the entire project at 100%
+
+
 #declare a constant
 define("FOLDER_CSS","CSS/");
 define("FILE_CSS", FOLDER_CSS."Style.css");
@@ -12,8 +27,13 @@ define("FOOTLOCKER_LOGO", FOLDER_IMAGE."Footlocker-Logo.png");
 define("DICKS_LOGO", FOLDER_IMAGE."Dicks-Logo.png");
 define("NIKE_LOGO", FOLDER_IMAGE."Nike.png");
 define("FOOTBALL_BACKGROUND", FOLDER_IMAGE."Football-Player.jpg");
-define("NFL_IMAGES", FOLDER_IMAGE."NFL-TEAMS/");
-define("IMAGE_NFL_LOGO", NFL_IMAGES."nfl-logo.png");
+define("NFL_LOGOS", FOLDER_IMAGE."NFL-TEAMS/");
+define("NFL_JERSEYS", FOLDER_IMAGE."NFL-Jerseys/");
+define("NFL_NAMES", FOLDER_IMAGE."Team-Name/");
+define("IMAGE_NFL_LOGO", NFL_LOGOS."nfl-logo.png");
+define("FOLDER_FILES","Files/");
+
+
 
 define('NAME_MAX_LENGTH',20);
 define('PRODUCT_CODE_MAX_LENGTH',20);
@@ -25,9 +45,12 @@ define('QUANTITY_MIN',0);
 define ("AMOUNT_NUMBER_OF_DECIMAL", 2);
 define ("TAX_RATE", 12.05);
 define ("SPECIAL_AD", NIKE_LOGO);
+define ("PURCHASE_TEXT" , FOLDER_FILES."purchases.txt");
+define("CHEAT_SHEET_LINK",FOLDER_FILES."Notes.txt");
 
 #open the Doctype and create page header
 function createPageHeader($title){
+    createCache();
     ?>
 <!DOCTYPE html>
 <html>
@@ -49,26 +72,13 @@ function createPageHeader($title){
 function createNavBar()
 {
     ?>
-<!--<div class="navbar">
-   <div id="navbar-brand">
-    <img src="
-    <button id="html"><span id="htmltxt" onclick="window.location.href='ShopPage.php'" >Shop</span></button>
-  <button id="css"><span id="htmltxt">About Us</span></button>
-  <button id="JS"><span id="htmltxt" onclick="window.location.href='ShopPage.php'">Contact Us</span></button>
-  <img src="
-</div>
-<br><br>
-<div id="container">
-</div>
-</div>-->
-
 <!-- Creating a div which contains the Navigation Bar and Website Logo  -->
 <div class="topnav" id="myTopnav">
     <img src="<?php echo IMAGE_NFL_LOGO ?>">
-  <a href="#home" onclick="window.location.href='index.php'" class="active">Home</a>
+  <a href="#home" onclick="window.location.href='index.php'">Home</a>
   <a href="#home" onclick="window.location.href='ShopPage.php'">Shop</a>
 <a href="#home" onclick="window.location.href='OrderPage.php'">Orders</a>
-<img src="<?php echo SOBZ_LOGO ?>"> 
+<img src="<?php echo SOBZ_LOGO ?>"/>  
 </div>
 
 
@@ -91,23 +101,37 @@ function createPageFooter(){
 <?php
 }
 
+function createCache (){
+header("Expires: Thu, 01 Dec 1994 08:00:00 GMT");
+
+header("Cache-Control: no-cache");
+
+header("Pragma: no-cache");
+}
+
 
 //Creating a function that displays the Team Logo of the selected Team from combo box
 function showTeamImage($team)
 {
-echo "<img src='Images/NFL-Teams/!" .$team.".png'class='teamLogo'><br><br>";
+echo "<img src='".NFL_LOGOS."/!" .$team.".png'class='teamLogo'><br><br>";
 }
 
 
 // Creating a function that displays the Team Jersey of the selected Team from combo box
 function showTeamJersey($team)
 {
-echo "<img src='Images/NFL-Jerseys/!" .$team.".jpeg'>";
+echo "<img src='".NFL_JERSEYS."/!".$team.".jpeg'>";
 }
 
+// Creating a function that displays the team NAME from selected combo box
 function showTeamName($team)
 {
-echo "<img src='Images/Team-Name/" .$team.".png'>";
+echo "<img src='".NFL_NAMES."/" .$team.".png'>";
+}
+
+function showPrintLogo()
+{
+echo "<img src='".SOBZ_LOGO."'class='printimg'>";
 }
 
 
@@ -212,6 +236,9 @@ function aboutUs(){
   <p>Sobz is a sporting goods company, which sells Game Packages. </p>
   <p>These packages include GameTickets, Jerseys, Tailgating Access, as well as a place for you to stay through your trip.</p>
   <p>This allows you to take off all the stress of planning within a click of a second</p>
+  
+  <!-- This creates a link, that allows the user to download the Term Cheat Sheet -->
+  <p> <a href="<?php echo CHEAT_SHEET_LINK?>" download> Click Here To Learn About PHP</p>
 </div>
 <?php
 }
@@ -335,59 +362,77 @@ $quantity=htmlspecialchars(trim($_POST['Quantity']));
             $errorCode = "The product code cannot be empty";
         }
         else{
+            
+            // validing if the product code is smaller than the maximum length
             if(mb_strlen($productCode) > PRODUCT_CODE_MAX_LENGTH){
                 $errorCode = "The make cannot cantain more than ".PRODUCT_CODE_MAX_LENGTH." characters";
             }
+            // Validating if the product code starts with P
             if (substr($productCode, 0,1) != "P" && substr($productCode, 0,1) != "p"){
                 $errorCode= "The first letter must be P";
             }
         }
         
+        // Validating if the user left the First name text box empty
         if($firstName == ''){
             $errorFname = "The first name cannot be empty";
         }
         else{
+            // validating if the user entered a name smaller than the max length
             if(mb_strlen($firstName) > NAME_MAX_LENGTH){
                 $errorFname = "Your first name cannot cantain more than ".NAME_MAX_LENGTH." characters";
             }
         }
         
+        // Validating if the user left the Last name text box empty
                 if($lastName == ''){
             $errorLname = "The first name cannot be empty";
         }
         else{
+           // validating if the user entered a name smaller than the max length
             if(mb_strlen($lastName) > NAME_MAX_LENGTH){
                 $errorLname = "Your fi name cannot cantain more than ".NAME_MAX_LENGTH." characters";
             }
         }
-        
+        // Validating if the user left the City text box empty
                 if($city == ''){
             $errorCity = "The city cannot be empty";
         }
         else{
+            // validating if the user entered a city string smaller than the max length
             if(mb_strlen($city) > CITY_MAX_LENGTH){
                 $errorCity = "The city cannot cantain more than ".CITY_MAX_LENGTH." characters";
             }
         }
         
+        // Validating if the users comments exceed the maximum length
         if(mb_strlen($comments) > COMMENT_MAX_LENGTH){
             $errorComments = "Your comments cannot cantain more than ".CITY_MAX_LENGTH." characters";
         }
         
+        // Validating if the user enetered any commas, because commas will mess up the spliting of arrays later on
+        if (str_contains($comments, ',')) {
+            $errorComments = "Please do not use any commas (',') in the comment secion";
+        }
+        
+        // Validating if the price is of numeric value
         if(!is_numeric($price)){
             $errorPrice = "Please enter a numeric value";
         }
         else{
+            //Validating if the price is greater than 0 and less than the Maximum price
             if($price < 0 || $price > PRICE_MAX)
             {
                 $errorYear = "Please enter a value between 0 and $".PRICE_MAX;
             }
         }
         
+        // Validating if the quantity is of numeric value
          if(!is_numeric($quantity)){
          $errorQuantity = "Please enter a numeric value";
          }
         else{
+            // Validating if the quantity is greater than the quantity min, and less than the quantity max
             if($quantity < QUANTITY_MIN || $quantity > QUANTITY_MAX)
             {
                 $errorQuantity = "Please enter a value between ".QUANTITY_MIN
@@ -411,7 +456,7 @@ $price="";
 $quantity="";
 
             // Confirmation message once there is no errors after submission
-            echo "Congats !! You purchased a package !!<br><br>";
+            echo "Congradualtions !! You purchased a package !!<br><br>";
            
         }
                }
@@ -565,21 +610,33 @@ $Team="";
  
  // This function saves all the records from the form, encodes them with JSON, and stores them within the purchase.txt file.
  function saveRecord($fname,$lname,$city,$code,$comment, $price, $quantity){
-        $myfilehandle = fopen("purchases.txt", "a") or die("The file could not be opened");
-        $taxes= computeTaxes($price);
+     
+     // Loading the text file, if file is not found it will send out a message
+        $myfilehandle = fopen(PURCHASE_TEXT, "a") or die("The file could not be opened");
+        
+        // Computing taxes, subtotal, and total, giving the prices given from user
+        
         $subtotal = calculateSubtotal($price,$quantity);
+        $taxes= computeTaxes($subtotal);
         $total= calculateTotal($subtotal,$taxes);
+        
+        // creating an array called customer, with all the information giving by user
         $customer = array($code,$fname,$lname,$city,$comment,$price,$quantity,$subtotal, $taxes, $total);
+        
+        // encoding the array into a json string
        $jsoncustomer= json_encode($customer);
-//        $label = array("Product Code","First Name","Last Name","City","Comments","Price", "Quantity","Subtotal", "Taxes", "Total");
-//        
-//        for($index=0; $index< count($customer); $index++){
-//            fwrite ($myfilehandle, $label[$index].": ".$customer[$index]."\r\n");
-//        }
+       
+       // stores the json string into the created text file(purchase.txt)
         fwrite ($myfilehandle,$jsoncustomer);
+        
+        // adds a new line after each appended line
         fwrite ($myfilehandle, "\r\n");
+        
+        // closes the file, and saves it
         fclose($myfilehandle);
-        echo "It worked";
+        
+        // Confirmation message if save was completed
+        echo "Success !  ";
         
  } 
  
@@ -589,78 +646,163 @@ $Team="";
 
      $command="";
      $commandColor="";
-             $fileHandle = fopen("purchases.txt", "r") or exit("Unable to open the file");
-                     echo  "<table border='1'>";
-        echo 	"<thead><tr>
-            <th>Product Code</th>
-		<th>First Name</th>
-		<th>Last Name<br></th>
-		<th>City</th>
-                <th>Comments\t\t</th>
+     $amount=0;
+     
+     
+        $file = fopen(PURCHASE_TEXT, "r") or die("Unable to open file!");
+        
+        
+                // Creates the tables, which has the variable of the selected team to be displayed in the header of the table
+        echo  "<table border='1'><br><tr>";
+	echo "<caption> Order Table</caption>";
+        echo 	"<thead>
+	<tr>
+		<th>Purchase Code</th>
+		<th>First Name<br></th>
+		<th>Last Name</th>
+                <th>City<br></th>
+                <th>Comments</th>
                 <th>Price</th>
                 <th>Quantity</th>
                 <th>Subtotal</th>
                 <th>Taxes</th>
-                <th>Grand Total<th>
+                <th>Total</th>
+
 	</tr>
-	</thead>
-        <tr>";
-             
-             while (!feof($fileHandle))
-        {
-            $line= fgets($fileHandle);
-            $client = substr($line, 1,-1);
-            $info= explode(",",$client);
-            
-            echo"<tr>";
-        for($index= 0; $index< count($info); $index++){
-            $information= $info[$index];
-            $pos= substr($information, 1,-1);
-            if($index<7){
-            echo "<td>$pos</td>";
-        }
-        else {
-            if($index==7){
-            if($information<100){
+	</thead>";
+        
+        // While the file exist do the following
+while (!feof($file)){  
+    
+    // store that line into the string data
+    $data = fgets($file);
+    
+    if ($data== ""){
+         echo '<script>alert("Table is up to date\n Number of sales = '.$amount.'")</script>';
+    }
+    
+    // this takes the purchase line, and removes the brackets and saves it into the string "info"
+    $info= substr($data, 1,-3);
+        error_reporting(0);
+        
+        // takes all the information from the info string, and separates them into different variables, sepparating by the comma
+    list($code,$fname,$lname,$city,$comments,$price,$quantity,$subtotal, $taxes, $total)= explode(',', $info);
+
+    
+    // Validating the amount of the subtotal for the color command
+                   if($subtotal<100){
                   $color= "red";
-            }if($information>= 100 && $information<1000){
+            }if($subtotal>= 100 && $price<1000){
                 $color= "yellow";
-            }if ($information>=1000){
+            }if ($subtotal>=1000){
                 $color= "green";
             }
-            echo "<td class='".$commandColor."'> $ $information</td>";
-        }else
-            echo "<td> $ $information</td>";
-        }
-        }
-        echo"<tr/>";
-        }
-    echo "</table>";
-    
-                            if(isset($_GET["command"])){
+            
+            // if the "command" name was set, do the following
+        if(isset($_GET["command"]))
+        {
+            
+            // storing the content into the command variable
             $command = htmlspecialchars($_GET["command"]);
             
-        if($command == "print" || $command== "Print"){
+            
+            // Checking if the string print was entered with a caps
+           if($command == "print" || $command== "Print"){
             $command= "print";
         }
-        else {
-        if($command == "color"){
-            if($color== "red"){
-              $commandColor = "red";
-              echo '<script>alert("'.$commandColor.'")</script>';
-            }if($color=="yellow"){
-                $commandColor= "yellow";
-            }if($color== "green"){
-                $commandColor= "green";
+        else 
+            {
+                    // Check if the string color was enetered with a caps
+                if($command == "color" || $command== "Color")
+                {
+            
+                     // Checking if the users command is color, and validating what was entered, and stores that into commandColor variable which changes the color of the subtotal column of table
+                    if($color== "red")
+                     {
+                     $commandColor = "red";
+                     }
+                     if($color=="yellow")
+                     {
+                     $commandColor= "yellow";
+                    }
+                    if($color== "green")
+                    {
+                     $commandColor= "green";
+                    }
+               }
             }
         }
-        }
-        }
         
-        fclose($fileHandle);
-        
+        // This puts all the created variables into the tables
+   echo "<tr>
+        <td>".substr($code, 1,-1)."</td>
+        <td>".substr($fname, 1,-1)."</td>
+        <td>".substr($lname, 1,-1)."</td>
+        <td>".substr($city, 1,-1)."</td>
+        <td>".substr($comments, 1,-1)."</td>
+        <td> $ ".substr($price, 1,-1)."</td>
+        <td>".substr($quantity, 1,-1)."</td>
+        <td class='".$commandColor."'> $".$subtotal."</td>
+        <td> $".$taxes."</td>
+        <td> $".$total."</td>
+           
+           </tr>"; 
+   $amount++;
+   
+
+}
+
+ 
+                            
+    // This closes the table tag once the for loop is complete
+    echo "</table>";
+
+    
+
  }
  
+ // This function creates the order pages, and changes the colors depending on the command entered by user
+ function createOrderPage()
+ 
+ {
+
+     // if the command was set, check what the command was set to
+    if(isset($_GET["command"]))
+    {
+        $command = htmlspecialchars($_GET["command"]);
+            
+        
+        
+        // if the command is print this will change the color of the page, and change the opacity of the logo
+        if($command == "print" || $command== "Print")
+        {
+            showPrintLogo();
+            printRecord();
+
+        }
+        else 
+            {
+                // if the command is color, display the table with the subtotal colored depending on the amount
+                if($command== "color" || $command== "Color" )
+                {
+                 createPageHeader("Order Page");
+                printRecord();
+                createPageFooter();
+                }
+            }
+    }
+    else 
+        {
+        // If command was not set, display a regular page with the headers, and footers
+        createPageHeader("Order Page");
+        printRecord();
+        createPageFooter();
+        }
+
+ }
+ 
+
+
  // This function takes array with Advertisment Logos, and randomly shuffles, and displays one in the footer tag of the page.
  // If the nike Logo is selected, it changes the class which changes the size, and adds a red border around the photo
  function showAdvertisment()
@@ -682,39 +824,19 @@ function computeTaxes($amount){
             
 $taxRate= TAX_RATE;
             $taxAmount= $amount * $taxRate /100;
-            $total=  $taxAmount +$amount;
             
             
-            return round($total, AMOUNT_NUMBER_OF_DECIMAL);
+            return round($taxAmount, AMOUNT_NUMBER_OF_DECIMAL);
 }
         
 // this function takes the price, and the quantitify and calculates the subtotal
 function  calculateSubtotal($price,$quantity){
 
-    return ($price*$quantity);
+    return round(($price*$quantity),AMOUNT_NUMBER_OF_DECIMAL);
 }
 
 // This function takes the subtotal, and the taxes and computes the total price of the purchase
-function calculateTotal($subtotal, $taxes){
-            return $subtotal+$taxes;
-        }
-            
-        function checkCommand(){
-            $command="";
-                            if(isset($_GET["command"])){
-            $command = htmlspecialchars($_GET["command"]);
-            
-        if($command == "print" || $command== "Print"){
-            $command= "print";
-                            }}
-
-                ?>
-                <div class="<?php echo $command; ?> ">
-                    <?php                               printRecord();?>
-                </div>
-            
-            
-            <?php
-        }
-        
-        
+function calculateTotal($subtotal, $taxes)
+{
+            return round(($subtotal+$taxes), AMOUNT_NUMBER_OF_DECIMAL);
+}
