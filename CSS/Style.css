@@ -216,7 +216,7 @@ background-color: black;
 /* used to change the color of the subtotal in the table depending on the amount */
 .yellow 
 {
-    color: yellow;
+    color: #ff9966;
 }
 
 .red 

@@ -11,6 +11,7 @@
 #Shaun Sobers (193337) 2021-03-09 Completed the shop pages, fixed CSS on homepages, and footers
 #Shaun Sobers (193337) 2021-03-11 Fixed bugs in Table, and Save function, editted Order Page
 #Shaun Sobers (193337) 2021-03-13  Fixed table , and Command functions on Order Page, fixed error in Compute Taxes function, fixed CSS on Index, Shop and Order Page, added more comments, changed project name to student id number
+#Shaun Sobers (193337) 2021-03-13 Completed the error handling function;
 #Shaun Sobers (193337) 2021-03-13 Completed the entire project at 100%
 
 
@@ -31,8 +32,10 @@ define("NFL_LOGOS", FOLDER_IMAGE."NFL-TEAMS/");
 define("NFL_JERSEYS", FOLDER_IMAGE."NFL-Jerseys/");
 define("NFL_NAMES", FOLDER_IMAGE."Team-Name/");
 define("IMAGE_NFL_LOGO", NFL_LOGOS."nfl-logo.png");
-define("FOLDER_FILES","Files/");
-
+define("FOLDER_DATA","Data/");
+define("FOLDER_ERRORS", "Errors/");
+define("FILE_ERROR", FOLDER_ERRORS."Error.txt");
+define("SHOW_ERROR_HANDLES", false);
 
 
 define('NAME_MAX_LENGTH',20);
@@ -45,12 +48,15 @@ define('QUANTITY_MIN',0);
 define ("AMOUNT_NUMBER_OF_DECIMAL", 2);
 define ("TAX_RATE", 12.05);
 define ("SPECIAL_AD", NIKE_LOGO);
-define ("PURCHASE_TEXT" , FOLDER_FILES."purchases.txt");
-define("CHEAT_SHEET_LINK",FOLDER_FILES."Notes.txt");
+define ("PURCHASE_TEXT" , FOLDER_DATA."purchases.txt");
+define("CHEAT_SHEET_LINK",FOLDER_DATA."Notes.txt");
+
+
 
 #open the Doctype and create page header
 function createPageHeader($title){
     createCache();
+    errorHandling();
     ?>
 <!DOCTYPE html>
 <html>
@@ -108,6 +114,83 @@ header("Cache-Control: no-cache");
 
 header("Pragma: no-cache");
 }
+
+function errorHandling(){
+
+set_error_handler("manageError");
+set_exception_handler("manageException"); 
+}
+
+function manageError($errorCode, $stringError, $fileError, $errorLocation)
+{
+ 
+
+    if (SHOW_ERROR_HANDLES == true)
+    {
+                $errorDate = new DateTime("now");
+        $errorDateResults = $errorDate->format('Y/m/d H:i:s:u');
+        echo"{ An error occured on the file '$fileError', on line:('$errorLocation'), Error Code: '$errorCode'"
+            . ", Error:". $stringError.", Date:".$errorDateResults.
+                ", Browser information: ".$browser." }";
+    }
+    else
+    {
+
+        echo "An error occured on the website. We appologize for the inconvienence \n";
+    
+
+        $errorDate = new DateTime("now");
+        $errorDateResults = $errorDate->format('Y/m/d H:i:s:u');
+        
+
+        $browser = $_SERVER["HTTP_USER_AGENT"];
+        
+        $error_message = "{ An error occured on the file '$fileError', on line:('$errorLocation'), Error Code: '$errorCode'"
+            . ", Error:". $stringError.", Date:".$errorDateResults.
+                ", Browser information: ".$browser." }";
+
+        file_put_contents(FILE_ERROR,$error_message."\r\n", FILE_APPEND);
+    }
+    die();
+}
+
+function manageException($error)
+{
+
+    
+    if(SHOW_ERROR_HANDLES== true)
+    {
+        echo " An Exception occured on the file" .$error->getFile().", on line ("
+                .$error->getLine().")". " , Error: ".$error->getMessage();
+    }
+    else
+    {
+
+        echo "An Problem occured on the website. We apologize for the inconvienence \n";
+ 
+
+        $exceptionDate = new DateTime("now");
+        $fullExceptionDate = $exceptionDate->format('Y/m/d H:i:s:u');
+        
+
+        $browser = $_SERVER["HTTP_USER_AGENT"];
+        
+        $$exceptionString = "{ An EXCEPTION occured in the file" .$error->getFile().", on line(".$error->getLine().""
+         . ") , Error: ".$error->getMessage(). " Date: ".$fullExceptionDate.
+         " Browser information: ".$browser." }";
+        
+
+        file_put_contents(FILE_ERROR,$exceptionString."\r\n", FILE_APPEND);
+    }
+    die();
+}
+
+       
+
+
+
+
+       
 
 
 //Creating a function that displays the Team Logo of the selected Team from combo box
@@ -438,6 +521,9 @@ $quantity=htmlspecialchars(trim($_POST['Quantity']));
                 $errorQuantity = "Please enter a value between ".QUANTITY_MIN
                     . " and ".QUANTITY_MAX;
             }
+            if (!is_int($quantity)){
+                $errorQuantity= "Please enter a whole number";
+            }
         }
         
         // This checks if the error messages are empty... If all error messages are empty, this means the infomration entered was valid, and we can proceed to next step
@@ -456,7 +542,7 @@ $price="";
 $quantity="";
 
             // Confirmation message once there is no errors after submission
-            echo "Congradualtions !! You purchased a package !!<br><br>";
+            echo "Congratulations !! You purchased a package !!<br><br>";
            
         }
                }
@@ -673,21 +759,24 @@ $Team="";
         
         // While the file exist do the following
 while (!feof($file)){  
-    
+    $code="";
+    $fname="";
     // store that line into the string data
     $data = fgets($file);
     
     if ($data== ""){
          echo '<script>alert("Table is up to date\n Number of sales = '.$amount.'")</script>';
+         break;
     }
     
     // this takes the purchase line, and removes the brackets and saves it into the string "info"
     $info= substr($data, 1,-3);
-        error_reporting(0);
+    
+ 
         
         // takes all the information from the info string, and separates them into different variables, sepparating by the comma
-    list($code,$fname,$lname,$city,$comments,$price,$quantity,$subtotal, $taxes, $total)= explode(',', $info);
-
+    
+     list($code,$fname,$lname,$city,$comments,$price,$quantity,$subtotal, $taxes, $total)= explode(',', $info);
     
     // Validating the amount of the subtotal for the color command
                    if($subtotal<100){

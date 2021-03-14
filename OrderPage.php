@@ -12,6 +12,7 @@
 #Shaun Sobers (193337) 2021-03-09 Completed the shop pages, fixed CSS on homepages, and footers
 #Shaun Sobers (193337) 2021-03-11 Fixed bugs in Table, and Save function, editted Order Page
 #Shaun Sobers (193337) 2021-03-13  Fixed table , and Command functions on Order Page, fixed error in Compute Taxes function, fixed CSS on Index, Shop and Order Page, added more comments, changed project name to student id number
+#Shaun Sobers (193337) 2021-03-13 Completed the error handling function;
 #Shaun Sobers (193337) 2021-03-13 Completed the entire project at 100%
 
 
