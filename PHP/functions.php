@@ -84,6 +84,9 @@ function createNavBar()
   <a href="#home" onclick="window.location.href='index.php'">Home</a>
   <a href="#home" onclick="window.location.href='ShopPage.php'">Shop</a>
 <a href="#home" onclick="window.location.href='OrderPage.php'">Orders</a>
+<a href="#home" onclick="window.location.href='RegisterPage.php'">Register</a>
+<a href="#home" onclick="window.location.href='Tester.php'">Tests</a>
+<a href="#home" onclick="window.location.href='Account.php'">Update Account</a>
 <img src="<?php echo SOBZ_LOGO ?>"/>  
 </div>
 
@@ -890,8 +893,311 @@ while (!feof($file)){
 
  }
  
+ function createRegisterPage()
+ {
+     
+global $firstName;
+global $lastName;
+global $address;
+global $city;
+global $province;
+global $postalcode;
+global $username;
+global $password;
+
+global $errorFname;
+global $errorLname;
+global $errorAddress;
+global $errorCity;
+global $errorProvince;
+global $errorPostalCode;
+global $errorUsername;
+global $errorPassword;
 
 
+//This checks if the submitinfo object has be altered
+               if(isset($_POST["register"])){
+
+
+
+// This takes the information stored within the object and saves it into a variable, which stops the user from doing any HTML injections or hacking.
+$firstName=htmlspecialchars(trim($_POST['FirstName']));
+$lastName= htmlspecialchars(trim($_POST['LastName']));
+$address=htmlspecialchars(trim($_POST['Address']));
+$city=htmlspecialchars(trim($_POST['City']));
+$postalcode=htmlspecialchars(trim($_POST['PostalCode']));
+$province=htmlspecialchars(trim($_POST['Province']));
+$username=htmlspecialchars(trim($_POST['Username']));
+$password=htmlspecialchars(trim($_POST['Password']));
+$customer = new Customer();
+
+
+$errorFname= $customer->setFirstName($firstName);
+$errorLname= $customer->setLastName($lastName);
+$errorAddress= $customer->setCustomerAddress($address);
+$errorCity= $customer->setCustomerCity($city);
+$errorProvince= $customer->setCustomerProvince($province);
+$errorPostalCode= $customer->setCustomerPostalCode($postalcode);
+$errorUsername= $customer->setUsername($username);
+$errorPassword= $customer->setPassword($password);
+
+
+        // Validations for all fields within the form
+        // This checks if the error messages are empty... If all error messages are empty, this means the infomration entered was valid, and we can proceed to next step
+        if ($errorFname == "" && $errorLname== "" && $errorCity == "" && $errorProvince == "" && $errorPostalCode == "" && $errorUsername == "" && $errorPassword == "" && $errorAddress== "")
+        {
+
+
+            //$customer($firstName, $lastName, $address, $city, $province, $postalcode, $username, $password);
+            $customer->save();
+
+            // Confirmation message once there is no errors after submission
+            echo "Your account was successfully created !!<br><br>";
+
+           
+        }
+               }
+ ?>  
+<div class="infocustomer">
+            
+    <!-- Creating a form for the customer information -->
+    <form class="<?php echo $team;?>"  action="RegisterPage.php" method='POST'>
+        <label>Create Customer Account</label>
+          <br><br><br>
+          
+              
+            <!-- Section for the First name, if error occurs span area will produce and show error Message -->        
+            <div style="color:red">*</div>
+            First Name:
+               <input type="text" name="FirstName"/><br>
+                    <span style="color:red"><?php echo $errorFname; ?></span><br><br>
+                    
+                
+            <!-- Section for the Last name, if error occurs span area will produce and show error Message -->
+            <div style="color:red">*</div>
+            Last Name:
+               <input type="text" name="LastName"/><br>
+                    <span style="color:red"><?php echo $errorLname ?></span><br><br>
+                
+                    
+                                <!-- Section for the city, if error occurs span area will produce and show error Message -->
+            <div style="color:red">*</div>
+            Customer Address:
+                <input type="text" name="Address"/><br>
+                    <span style="color:red"><?php echo $errorCity ?></span><br><br>
+                    
+            <!-- Section for the city, if error occurs span area will produce and show error Message -->
+            <div style="color:red">*</div>
+            Customer City:
+                <input type="text" name="City"/><br>
+                    <span style="color:red"><?php echo $errorCity ?></span><br><br>
+                    
+                    
+           <div style="color:red">*</div>
+            Province:
+                <input type="text" name="Province"/><br>
+                    <span style="color:red"><?php echo $errorProvince ?></span><br><br>
+                    
+                    
+           <!-- Section for the Comments, if error occurs span area will produce and show error Message -->   
+            Postal Code:
+                <input type="text" name="PostalCode"/><br>
+                    <span style="color:red"><?php echo $errorPostalCode ?></span><br><br>
+                    
+               
+             <!-- Section for the price, if error occurs span area will produce and show error Message -->
+            <div style="color:red">*</div>
+            Username:
+                <input type="text" name="Username"/><br>
+                    <span style="color:red"><?php echo $errorUsername ?></span><br><br>
+                    
+             
+            <!-- Section for the Quantity, if error occurs span area will produce and show error Message -->        
+            <div style="color:red">*</div>
+            Password:
+                <input type="password" name="Password"/><br>
+                    <span style="color:red"><?php echo $errorPassword ?></span><br><br>
+                   
+                    
+            <!-- Section for the legend, which shows Which sections must not be empty -->
+            <div style="color:red">* = required</div>
+ 
+            <!-- This is the submit button -->
+            <input name="register" type="submit" value="Confirm Information"/><br><br>
+    </form>
+     
+    
+    
+           
+            
+            <?php
+ }
+ 
+ 
+ 
+ function UpdateAccountPage()
+ {
+     
+global $firstName;
+global $lastName;
+global $address;
+global $city;
+global $province;
+global $postalcode;
+global $username;
+global $password;
+
+global $errorFname;
+global $errorLname;
+global $errorAddress;
+global $errorCity;
+global $errorProvince;
+global $errorPostalCode;
+global $errorUsername;
+global $errorPassword;
+
+
+//This checks if the submitinfo object has be altered
+               if(isset($_POST["register"])){
+
+
+
+// This takes the information stored within the object and saves it into a variable, which stops the user from doing any HTML injections or hacking.
+$firstName=htmlspecialchars(trim($_POST['FirstName']));
+$lastName= htmlspecialchars(trim($_POST['LastName']));
+$address=htmlspecialchars(trim($_POST['Address']));
+$city=htmlspecialchars(trim($_POST['City']));
+$postalcode=htmlspecialchars(trim($_POST['PostalCode']));
+$province=htmlspecialchars(trim($_POST['Province']));
+$username=htmlspecialchars(trim($_POST['Username']));
+$password=htmlspecialchars(trim($_POST['Password']));
+$customer = new Customer();
+
+
+$errorFname= $customer->setFirstName($firstName);
+$errorLname= $customer->setLastName($lastName);
+$errorAddress= $customer->setCustomerAddress($address);
+$errorCity= $customer->setCustomerCity($city);
+$errorProvince= $customer->setCustomerProvince($province);
+$errorPostalCode= $customer->setCustomerPostalCode($postalcode);
+$errorUsername= $customer->setUsername($username);
+$errorPassword= $customer->setPassword($password);
+
+
+        // Validations for all fields within the form
+        // This checks if the error messages are empty... If all error messages are empty, this means the infomration entered was valid, and we can proceed to next step
+        if ($errorFname == "" && $errorLname== "" && $errorCity == "" && $errorProvince == "" && $errorPostalCode == "" && $errorUsername == "" && $errorPassword == "" && $errorAddress== "")
+        {
+
+
+            //$customer($firstName, $lastName, $address, $city, $province, $postalcode, $username, $password);
+            $customer->update("11edec05-a3d9-11eb-a825-9078415069cc");
+
+            // Confirmation message once there is no errors after submission
+            echo "Your account was successfully created !!<br><br>";
+
+           
+        }
+               }
+ ?>  
+
+    <!-- Creating a form for the customer information -->
+    <form action="RegisterPage.php" method='POST'>
+        <label>Update Customer Information</label>
+          <br><br><br>
+              <?php 
+    $customer1= new Customer();
+    $customer1->load("9476c952-a380-11eb-859f-9078415069cc");
+    ?>
+              
+            <!-- Section for the First name, if error occurs span area will produce and show error Message -->        
+            <div style="color:red">*</div>
+            First Name:
+            <input type="text" name="FirstName" placeholder="<?php echo $customer1->getFirstName();?>"/><br>
+                    <span style="color:red"><?php echo $errorFname; ?></span><br><br>
+                    
+                
+            <!-- Section for the Last name, if error occurs span area will produce and show error Message -->
+            <div style="color:red">*</div>
+            Last Name:
+            <input type="text" name="LastName" placeholder="<?php echo $customer1->getLastName();?>"/><br>
+                    <span style="color:red"><?php echo $errorLname ?></span><br><br>
+                
+                    
+                                <!-- Section for the city, if error occurs span area will produce and show error Message -->
+            <div style="color:red">*</div>
+            Customer Address:
+            <input type="text" name="Address" placeholder="<?php echo $customer1->getCustomerAddress();?>"/><br>
+                    <span style="color:red"><?php echo $errorCity ?></span><br><br>
+                    
+            <!-- Section for the city, if error occurs span area will produce and show error Message -->
+            <div style="color:red">*</div>
+            Customer City:
+            <input type="text" name="City" placeholder="<?php echo $customer1->getCustomerCity();?>"/><br>
+                    <span style="color:red"><?php echo $errorCity ?></span><br><br>
+                    
+                    
+           <div style="color:red">*</div>
+            Province:
+            <input type="text" name="Province" placeholder="<?php echo $customer1->getCustomerProvince();?>"/><br>
+                    <span style="color:red"><?php echo $errorProvince ?></span><br><br>
+                    
+                    
+           <!-- Section for the Comments, if error occurs span area will produce and show error Message -->   
+            Postal Code:
+            <input type="text" name="PostalCode" placeholder="<?php echo $customer1->getCustomerPostalCode();?>"/><br>
+                    <span style="color:red"><?php echo $errorPostalCode ?></span><br><br>
+                    
+               
+             <!-- Section for the price, if error occurs span area will produce and show error Message -->
+            <div style="color:red">*</div>
+            Username:
+                <input type="text" name="Username" placeholder="<?php echo $customer1->getUsername();?>"/><br>
+                    <span style="color:red"><?php echo $errorUsername ?></span><br><br>
+                    
+             
+            <!-- Section for the Quantity, if error occurs span area will produce and show error Message -->        
+            <div style="color:red">*</div>
+            Password:
+            <input type="password" name="Password" placeholder="<?php echo $customer1->getPassword();?>"/><br>
+                    <span style="color:red"><?php echo $errorPassword ?></span><br><br>
+                   
+                    
+            <!-- Section for the legend, which shows Which sections must not be empty -->
+            <div style="color:red">* = required</div>
+ 
+            <!-- This is the submit button -->
+            <input name="register" type="submit" value="Update Customer Account"/><br><br>
+    </form>
+     
+    
+    
+           
+            
+            <?php
+ }
+
+function loadcustomer(){
+    $customer = new Customer();
+    $customer->load("11edec05-a3d9-11eb-a825-9078415069cc");
+    
+    echo $customer->getFirstName();
+    echo $customer->getCustomerID();
+}
+
+
+function login ()
+{
+ $customer = new Customer();
+ $loginresults= $customer->login("shaun_sobers", "hello");
+ 
+ if ($loginresults == ""){
+     echo "Hello ". $customer->getFirstName();
+ }
+ else {
+     echo "please retry";
+ }
+}
  // This function takes array with Advertisment Logos, and randomly shuffles, and displays one in the footer tag of the page.
  // If the nike Logo is selected, it changes the class which changes the size, and adds a red border around the photo
  function showAdvertisment()

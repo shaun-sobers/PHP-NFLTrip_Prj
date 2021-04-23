@@ -27,6 +27,44 @@ class Customer {
     const POSTAL_MAX_LENGTH = 7; 
     const USERNAME_MAX_LENGTH = 12;
     const PASSWORD_MAX_LENGTH = 255; 
+
+    function __construct($new_firstName = "", $new_lastName = "", $new_customer_address= "", $new_customer_city = "", $new_customer_province = "", $new_postal_code = "", $new_username= "", $new_password= "") 
+    {
+
+            $this->setFirstName($new_firstName);
+            $this->setLastName($new_lastName);
+            $this->setCustomerCity($new_customer_city);
+            $this->setCustomerAddress($new_customer_address);
+            $this->setCustomerProvince($new_customer_province);
+            $this->setCustomerPostalCode($new_customer_province);
+            $this->setUsername($new_username);
+            $this->setPassword($new_password);
+       
+
+        # this code is called everytime "=new car()" is called
+    }
+    
+    
+            public function getCustomerID()
+    {
+        return $this->customer_id;
+        
+    }
+    
+    public function setCustomerID($newCustomerID)
+    {
+        if(mb_strlen($newCustomerID) == 0)
+        {
+            return "Your customer ID cannot be empty!";
+        }
+        else
+        {
+                $this->customer_id = $newCustomerID;
+                return "";
+            }
+        }
+    
+    
     
         public function getFirstName()
     {
@@ -266,6 +304,117 @@ class Customer {
             }
         }
     }
+ 
+        function save()
+    {
+        global $connection;
+            #Call the Stored Procedure  CALL car_insert(:brand, :year, :transmission)
+           $SQLQuery = "INSERT INTO customers (firstname, lastname, address, city, province, postalcode, customer_login, customer_password)" .
+                "VALUES (:firstname, :lastname, :address, :city, :province, :postalcode, :customer_login, :customer_password);";
+            
+           $PDOStatement = $connection->prepare($SQLQuery);
+           $PDOStatement->bindParam(":firstname", $this->firstName);
+           $PDOStatement->bindParam(":lastname", $this->lastName);
+           $PDOStatement->bindParam(":address", $this->customer_address);
+           $PDOStatement->bindParam(":city", $this->customer_city);
+           $PDOStatement->bindParam(":province", $this->customer_province);
+           $PDOStatement->bindParam(":postalcode", $this->postal_code);
+           $PDOStatement->bindParam(":customer_login", $this->username);
+           $PDOStatement->bindParam(":customer_password", $this->password);
+           $PDOStatement->execute();
+          
+           return true;
+        }
+        
     
+        function update($customer_id)
+    {
+        global $connection;
+            #Call the Stored Procedure  CALL car_insert(:brand, :year, :transmission)
+            $SQLQuery = "UPDATE cars SET firstname = :firstname, lastname= :lastname, address= :address, city= :city , province= :province, postalcode= :postalcode " .
+                    "customer_login = :customer_login, customer_password = :customer_password " .
+                    "WHERE customer_id = :customer_id";
+            
+           $PDOStatement = $connection->prepare($SQLQuery);
+
+           
+           $PDOStatement->bindParam(":firstname", $this->firstName);
+           $PDOStatement->bindParam(":lastname", $this->lastName);
+           $PDOStatement->bindParam(":address", $this->customer_address);
+           $PDOStatement->bindParam(":city", $this->customer_city);
+           $PDOStatement->bindParam(":province", $this->customer_province);
+           $PDOStatement->bindParam(":postalcode", $this->postal_code);
+           $PDOStatement->bindParam(":customer_login", $this->username);
+           $PDOStatement->bindParam(":customer_password", $this->password);
+           $PDOStatement->bindParam(":customer_id", $customer_id);
+           $PDOStatement->execute();
+          
+           return true;
+        }
+        
+        
+            function load($customer_id)
+    {
+       global $connection;
+       
+       #call your STORED PROCEDURE
+       $SQLQuery = "SELECT customer_id, firstname, lastname, address, city, province, postalcode, customer_login, customer_password   FROM customers WHERE customer_id = :customer_id";
+       
+       $PDOStatement = $connection->prepare($SQLQuery);
+       $PDOStatement->bindParam(":customer_id", $customer_id);
+       $PDOStatement->execute();
+       
+       if($row = $PDOStatement->fetch())
+       {
+           $this->customer_id = $row["customer_id"];
+           $this->firstName = $row["firstname"];
+           $this->lastName = $row["lastname"];
+           $this->customer_address= $row["address"];
+           $this->customer_city = $row["city"];
+           $this->customer_province = $row["province"];
+           $this->postal_code= $row["postalcode"];
+           $this->username = $row["customer_login"];
+           $this->password = $row["customer_password"];
+           
+           return true;
+  
+       }
+    }
+    
+    
+    function login($customer_username, $customer_password)
+    {
+       global $connection;
+       
+       #call your STORED PROCEDURE
+       $SQLQuery = "SELECT customer_id, firstname, lastname, address, city, province, postalcode, customer_login, customer_password   FROM customers WHERE customer_login = :customer_login";
+       
+       $PDOStatement = $connection->prepare($SQLQuery);
+       $PDOStatement->bindParam(":customer_login", $customer_username);
+       $PDOStatement->execute();
+       
+       if($row = $PDOStatement->fetch())
+       {
+           $this->customer_id = $row["customer_id"];
+           $this->firstName = $row["firstname"];
+           $this->lastName = $row["lastname"];
+           $this->customer_address= $row["address"];
+           $this->customer_city = $row["city"];
+           $this->customer_province = $row["province"];
+           $this->postal_code= $row["postalcode"];
+           $this->username = $row["customer_login"];
+           $this->password = $row["customer_password"];
+           
+           
+           if ($this->password != $customer_password)
+           {
+               return "The password is incorrect";
+           }
+           
+           return "";
+  
+       }
+    }
 }
+    
 
