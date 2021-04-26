@@ -331,9 +331,12 @@ class Customer {
     {
         global $connection;
             #Call the Stored Procedure  CALL car_insert(:brand, :year, :transmission)
-            $SQLQuery = "UPDATE cars SET firstname = :firstname, lastname= :lastname, address= :address, city= :city , province= :province, postalcode= :postalcode " .
+            $SQLQuery = "UPDATE customers SET firstname = :firstname, lastname= :lastname, address= :address, city= :city , province= :province, postalcode= :postalcode, " .
                     "customer_login = :customer_login, customer_password = :customer_password " .
-                    "WHERE customer_id = :customer_id";
+                    "WHERE customer_id = :customer_id;";
+            
+//            UPDATE customers SET firstname = 'Josh', lastname= 'Man', address= 'BA', city= 'MA' , province= 'LA', postalcode= 'MLA'
+//,customer_login = 'LA', customer_password = 'KSn'  WHERE customer_id = '7beeb3fc-a48c-11eb-a825-9078415069cc';
             
            $PDOStatement = $connection->prepare($SQLQuery);
 
@@ -394,7 +397,14 @@ class Customer {
        $PDOStatement->execute();
        
        if($row = $PDOStatement->fetch())
-       {
+       {    
+            
+           $this->username = $row["customer_login"];
+           $this->password = $row["customer_password"];
+           
+           
+           if($this->password == $customer_password)
+           {
            $this->customer_id = $row["customer_id"];
            $this->firstName = $row["firstname"];
            $this->lastName = $row["lastname"];
@@ -404,6 +414,9 @@ class Customer {
            $this->postal_code= $row["postalcode"];
            $this->username = $row["customer_login"];
            $this->password = $row["customer_password"];
+           return "";
+           }
+
            
            
            if ($this->password != $customer_password)
@@ -411,7 +424,6 @@ class Customer {
                return "The password is incorrect";
            }
            
-           return "";
   
        }
     }

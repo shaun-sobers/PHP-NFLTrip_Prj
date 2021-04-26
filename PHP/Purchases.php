@@ -1,7 +1,7 @@
 <?php
 require_once 'connectionDB.php';
 require_once 'Collection.php';
-require_once 'Product.php';
+require_once 'Purchase.php';
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -9,26 +9,25 @@ require_once 'Product.php';
  */
 
 /**
- * Description of Products
+ * Description of Purchases
  *
  * @author Shaun
  */
-class Products extends Collection{
-    
-        function __construct() {
+class Purchases extends Collection {
+   
+            function __construct() {
         global $connection;
         
         #call the SP
-        $SQLQuery = "SELECT product_id, product_code , product_description, product_price FROM products";
+        $SQLQuery = "SELECT purchase_ID ,product_id, customer_id, Purchase_Comments, Purchase_Quantity FROM purchases";
         
         $PDOStatement= $connection->prepare($SQLQuery);
         $PDOStatement->execute();
         
         while($row =$PDOStatement->fetch())
         {
-            $Product = new Product($row["product_id"],$row["product_code"], $row["product_description"], $row["product_price"]);
-            $this->add($row["product_id"], $Product);
+            $Purchase = new Purchase($row["Purchase_Quantity"], $row["Purchase_Comments"], $row["customer_id"], $row["product_id"], $row["purchase_ID"]);
+            $this->add($row["purchase_ID"], $Purchase);
         }
     }
-
 }

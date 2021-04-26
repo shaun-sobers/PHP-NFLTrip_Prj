@@ -13,6 +13,7 @@
  */
 class Product 
 {
+    private $productid= "";
     private $productCode = "";#$this-> is used to access regular variables
     private $productDescription = "";
     private $productPrice = 0.00;
@@ -21,6 +22,35 @@ class Product
     
     const PRODUCT_CODE_MAX_LENGTH = 12; 
     const PRODUCT_PRICE_MAX_LENGTH = 10000.00; 
+    
+    
+        function __construct($new_product_id= "", $new_product_code="", $new_product_description="", $new_product_price="") 
+    {
+
+            $this->productid= $new_product_id;
+            $this->productCode= $new_product_code;
+            $this->productDescription= $new_product_description;
+            $this->productPrice= $new_product_price;
+            $this-> costPrice= 0;
+       
+
+        # this code is called everytime "=new car()" is called
+    }
+    
+                public function getProductID()
+    {
+        return $this->productid;
+        
+    }
+    
+    public function setProductID($newProductID)
+    {
+                $this->productid = $newProductID;
+                return "";
+                
+            }
+        
+    
     
     
     
@@ -131,5 +161,28 @@ class Product
      
     }
 
+    
+       function load($product_id)
+    {
+       global $connection;
+       
+       #call your STORED PROCEDURE
+       $SQLQuery = "SELECT product_id, product_code , product_description, product_price FROM products WHERE product_id = :product_id";
+       
+       $PDOStatement = $connection->prepare($SQLQuery);
+       $PDOStatement->bindParam(":product_id", $product_id);
+       $PDOStatement->execute();
+       
+       if($row = $PDOStatement->fetch())
+       {
+           $this->productCode= $row["product_code"];
+           $this->productDescription= $row["product_description"];
+           $this->productPrice= $row["product_price"];
+           $this->productid= $row["product_id"];
+           
+           return true;
+  
+       }
+    }
 
 }

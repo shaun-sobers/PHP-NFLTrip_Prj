@@ -59,6 +59,9 @@ function createPageHeader($title){
     errorHandling();
     ?>
 <!DOCTYPE html>
+<?php
+
+?>
 <html>
     <head>
         <!-- Linking the files from other pages -->
@@ -84,14 +87,15 @@ function createNavBar()
   <a href="#home" onclick="window.location.href='index.php'">Home</a>
   <a href="#home" onclick="window.location.href='ShopPage.php'">Shop</a>
 <a href="#home" onclick="window.location.href='OrderPage.php'">Orders</a>
-<a href="#home" onclick="window.location.href='RegisterPage.php'">Register</a>
 <a href="#home" onclick="window.location.href='Tester.php'">Tests</a>
 <a href="#home" onclick="window.location.href='Account.php'">Update Account</a>
+<a href="#home" onclick="window.location.href='Login.php'">Login</a>
 <img src="<?php echo SOBZ_LOGO ?>"/>  
 </div>
 
 
 <?php
+    LoginLogout();
 }
 
 #create the page footer and close html tag
@@ -160,7 +164,7 @@ function manageError($errorCode, $stringError, $fileError, $errorLocation)
 function manageException($error)
 {
 
-    
+
     if(SHOW_ERROR_HANDLES== true)
     {
         echo " An Exception occured on the file" .$error->getFile().", on line ("
@@ -178,7 +182,7 @@ function manageException($error)
 
         $browser = $_SERVER["HTTP_USER_AGENT"];
         
-        $$exceptionString = "{ An EXCEPTION occured in the file" .$error->getFile().", on line(".$error->getLine().""
+        $exceptionString = "{ An EXCEPTION occured in the file" .$error->getFile().", on line(".$error->getLine().""
          . ") , Error: ".$error->getMessage(). " Date: ".$fullExceptionDate.
          " Browser information: ".$browser." }";
         
@@ -961,7 +965,7 @@ $errorPassword= $customer->setPassword($password);
 <div class="infocustomer">
             
     <!-- Creating a form for the customer information -->
-    <form class="<?php echo $team;?>"  action="RegisterPage.php" method='POST'>
+    <form action="RegisterPage.php" method='POST'>
         <label>Create Customer Account</label>
           <br><br><br>
           
@@ -1071,6 +1075,7 @@ $postalcode=htmlspecialchars(trim($_POST['PostalCode']));
 $province=htmlspecialchars(trim($_POST['Province']));
 $username=htmlspecialchars(trim($_POST['Username']));
 $password=htmlspecialchars(trim($_POST['Password']));
+$customer_id="11edec05-a3d9-11eb-a825-9078415069cc";
 $customer = new Customer();
 
 
@@ -1082,7 +1087,7 @@ $errorProvince= $customer->setCustomerProvince($province);
 $errorPostalCode= $customer->setCustomerPostalCode($postalcode);
 $errorUsername= $customer->setUsername($username);
 $errorPassword= $customer->setPassword($password);
-
+$errorID=$customer->setCustomerID($customer_id);
 
         // Validations for all fields within the form
         // This checks if the error messages are empty... If all error messages are empty, this means the infomration entered was valid, and we can proceed to next step
@@ -1091,10 +1096,10 @@ $errorPassword= $customer->setPassword($password);
 
 
             //$customer($firstName, $lastName, $address, $city, $province, $postalcode, $username, $password);
-            $customer->update("11edec05-a3d9-11eb-a825-9078415069cc");
+            $customer->update($customer->getCustomerID());
 
             // Confirmation message once there is no errors after submission
-            echo "Your account was successfully created !!<br><br>";
+            echo "Your account was successfully updated !!<br><br>";
 
            
         }
@@ -1102,12 +1107,19 @@ $errorPassword= $customer->setPassword($password);
  ?>  
 
     <!-- Creating a form for the customer information -->
-    <form action="RegisterPage.php" method='POST'>
+    
+    <?php
+    if(isset($_SESSION['customer_id'])){
+       
+    ?>
+        <form action="Account.php" method='POST'>
         <label>Update Customer Information</label>
           <br><br><br>
               <?php 
     $customer1= new Customer();
-    $customer1->load("9476c952-a380-11eb-859f-9078415069cc");
+    $customer_id= $_SESSION['customer_id'];
+    $customer1->load($customer_id);
+    $customer1->setCustomerID($customer_id);
     ?>
               
             <!-- Section for the First name, if error occurs span area will produce and show error Message -->        
@@ -1169,12 +1181,18 @@ $errorPassword= $customer->setPassword($password);
             <!-- This is the submit button -->
             <input name="register" type="submit" value="Update Customer Account"/><br><br>
     </form>
-     
+     <?php
+    } else 
+    {
+         echo "<script type='text/javascript'>alert('Please Login to update Account');</script>";
+    }
+    
+    
     
     
            
             
-            <?php
+            
  }
 
 function loadcustomer(){
@@ -1183,6 +1201,106 @@ function loadcustomer(){
     
     echo $customer->getFirstName();
     echo $customer->getCustomerID();
+}
+
+function createLogoutForm()
+{
+    
+    
+     if(isset($_POST["logout"]))
+    {
+        // session_start();
+        session_destroy();
+        //unset($_SESSION['customer_id']);
+        header("Location:index.php");
+        echo "Thank you";
+        
+    }
+    ?>
+    <?php $customer= new Customer();
+    $customer->load($_SESSION['customer_id']);
+    ?>
+    <form method='POST'>
+    Welcome  <?php echo $customer->getFirstName()." , " .$customer->getLastName();?>
+    <button type="submit" name="logout">Log out</button><br>
+    </form>
+    
+   
+    
+    <?php
+    
+
+}
+
+function LoginLogout()
+{
+    session_start();
+    if(isset($_SESSION["customer_id"]))
+        createLogoutForm ();
+    else{
+      createLoginForm ();
+    }
+
+}
+
+function createLoginForm()
+{
+    
+ if(isset($_POST["login"])){
+    
+// This takes the information stored within the object and saves it into a variable, which stops the user from doing any HTML injections or hacking.
+$username=htmlspecialchars(trim($_POST['username']));
+$password= htmlspecialchars(trim($_POST['password']));
+$customer = new Customer();
+
+$loginmessgae=$customer->login($username, $password);
+
+
+
+        // Validations for all fields within the form
+        // This checks if the error messages are empty... If all error messages are empty, this means the infomration entered was valid, and we can proceed to next step
+        if ($loginmessgae == "")
+        {
+
+            echo "Welcome (" .$customer->getFirstName(). ") , " .$customer->getLastName();
+            if($customer->getCustomerID() != ""){
+                
+                //session_start();
+                
+                $_SESSION['customer_id']= $customer->getCustomerID();
+            ?> <p> Home </p> <a href='index.php'>Home Page</a><?php
+            }
+
+            
+           // echo $_SESSION['customer_id'];
+
+           
+        }
+        
+        else {
+            echo $loginmessgae;
+        }
+               }
+    ?>
+      <div class="login-container">
+          <form method='POST'>
+      <input type="text" placeholder="Username" name="username">
+      <input type="password" placeholder="Password" name="password">
+      <button type="submit" name="login">Login</button><br>
+      <p> Need a user account ? <a href="RegisterPage.php"> Register</a> </p>
+
+      
+    </form>
+          
+          
+          
+          <?php
+          
+          
+    if(isset($_SESSION['customer_id'])){
+        echo '<script>alert("Welcome back '.$_SESSION['customer_id'].'")</script>';
+        header("Location:index.php");
+    }
 }
 
 
@@ -1198,6 +1316,146 @@ function login ()
      echo "please retry";
  }
 }
+
+function createUserTable()
+{
+    
+    
+    if(isset($_POST['purchase_id'])){
+        $purchase_id = $_POST['purchase_id'];
+        $p1= new Purchase();
+        if($p1->delete($purchase_id)){
+            echo"Thank you, your purchase id: (".$purchase_id.") was successfully deleted";
+        }else {
+            echo"could not delete";
+        }
+    }
+    
+   echo "<table style='border:1px solid black'>
+  <tr>
+   <th>Delete</th>
+    <th>Product Code</th>
+     <th>First Name</th>
+      <th>Last Name</th>
+       <th>City</th>
+        <th>Comments</th>
+         <th>Price</th>
+          <th>Qty</th>
+           <th>Subtotal</th>
+            <th>Taxes</th>
+             <th>Grand Total</th>
+  </tr>";
+ 
+   
+   $purchases = new Purchases();
+   
+   foreach ($purchases->items as $purchase)
+   { 
+       echo "<tr>";
+       $customer= new Customer();
+       $product = new Product();
+       $product->load($purchase->getPurchaseProduct_Id());
+       $customer->load($purchase->getPurchaseCustomer_ID());
+       $quantity= $purchase->getPurchaseQuantity();
+       $productPrice= $product->getProductPrice();
+       $subtotal= calculateSubtotal($productPrice,$quantity);
+       $taxes = computeTaxes($subtotal);
+       $grandtotal=  calculateTotal($subtotal, $taxes);
+       
+       
+//       echo "Purchase ID: ".$purchase->getPurchase_ID();
+//       echo "First Name: ".$customer->getFirstName();
+//       echo "Last Name: ".$customer->getLastName();
+//       echo "Customer City: " .$customer->getCustomerCity();
+//       echo "Comments :" .$purchase->getPurchaseComments();
+//       echo "Price: " .$product->getProductPrice();
+//       echo "Product Id : " .$purchase->getPurchaseProduct_Id();
+//       echo "Quantity: " .$quantity;
+//       echo "Subtotal: " .$subtotal;
+//       echo "Taxes: " .$taxes;
+//       echo "GrandTotal: " .$grandtotal;
+//       
+        echo "<form action='Tester.php' method='post'>"; 
+      echo "<td> <button type='submit' name='purchase_id' value='".$purchase->getPurchase_ID()."'>Delete</button></td>";
+      echo "</form>";
+      echo "<input type='hidden' name='purchase_id' value='" . $purchase->getPurchase_ID() ."'>";
+      echo "<td>".$purchase->getPurchaseProduct_Id()."</td>";
+      echo "<td>".$customer->getFirstName()."</td>";
+      echo "<td>".$customer->getLastName()."</td>";
+      echo "<td>".$customer->getCustomerCity()."</td>";
+      echo "<td>".$purchase->getPurchaseComments()."</td>";
+      echo "<td>".$product->getProductPrice()."</td>";
+      echo "<td>".$quantity."</td>";
+      echo "<td>".$subtotal."</td>";
+      echo "<td>".$taxes."</td>";
+      echo "<td>".$grandtotal."</td>";
+
+           echo "</tr>";
+      
+   }
+   
+
+echo "</table>
+</form>";
+}
+
+function createUpdateForm()
+{
+    ?>
+     <form action="index.php" method="post">
+            Show purchases made on this date or later: <input name="year">
+            <input type="submit" name="search" value="Search by date">
+        </form>
+       
+        <?php
+       
+        if(isset($_POST["update"]))
+        {
+            $customer = new Customer();
+           
+            if($customer->load($_POST["customer_id"]))
+            {
+                $customer->setYear($_POST["newYear"]);
+               
+                $customer->save();
+            }
+        }
+       
+        if(isset($_POST["search"]))
+        {
+            $cars = new cars($_POST["year"]);
+       
+            echo "<table style='border:1px solid black '>";
+       
+        ?>
+            <tr>
+                <th>Brand</th>
+                <th>Year</th>
+                <th>Update</th>
+            </tr>
+       
+        <?php
+        foreach($cars->items as $car)
+        {
+            echo "<tr>";
+           
+            echo "<td>" . $car->getBrand() . "</td>";
+            echo "<td>" . $car->getYear() . "</td>";
+           
+            echo "<td><form action='index.php' method='post'>"
+            . '<br><input type="text name="newYear">'
+            . '<br><input type="submit" name="update" value="Modify the year">'
+            . '<br><input type="hidden" name="car_id value="' . $customer->getCustomerID() . '">'
+            . "</form></td>";
+           
+            echo "</tr>";
+        }
+       
+        echo "</table>";
+        }
+}
+
+
  // This function takes array with Advertisment Logos, and randomly shuffles, and displays one in the footer tag of the page.
  // If the nike Logo is selected, it changes the class which changes the size, and adds a red border around the photo
  function showAdvertisment()

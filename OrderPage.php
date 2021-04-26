@@ -27,6 +27,8 @@ $command="";
 require_once FILE_PHP_FUNCTIONS; 
 
 #Creates order page, with Commands
+//createPageHeader("OrderPage");
 createOrderPage();
+//createPageFooter();
      
 ?>

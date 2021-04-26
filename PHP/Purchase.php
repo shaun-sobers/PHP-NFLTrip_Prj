@@ -14,15 +14,50 @@
 class Purchase {
     
 
+    private $purchaseId="";
     private $purchaseQuantity = 0;
-    private $purchasePrice = 0.00;
     private $purchaseComment = "";
+    private $customer_id = "";
+    private $product_id= "";
+    
     
     
     const PURCHASE_MAX_QUANTITY = 999; 
     const PURCHASE_COMMENTS_MAX_LENGTH = 200; 
     
+//    
+//            function __construct($new_purchase_quantity="", $new_purchase_comments="", $new_customer_id= "", $new_product_id="") 
+//    {
+//
+//                $this->customer_id= $new_customer_id;
+//                $this->product_id= $new_product_id;
+//                $this->purchaseQuantity= $new_purchase_quantity;
+//                $this-> purchaseComment= $new_purchase_comments;
+//       
+//
+//        # this code is called everytime "=new car()" is called
+//    }
     
+             function __construct($new_purchase_quantity="", $new_purchase_comments="", $new_customer_id= "", $new_product_id="", $new_purchase_id="") 
+    {
+                 
+                $this->purchaseId= $new_purchase_id;
+                $this->customer_id= $new_customer_id;
+                $this->product_id= $new_product_id;
+                $this->purchaseQuantity= $new_purchase_quantity;
+                $this-> purchaseComment= $new_purchase_comments;
+                
+       
+
+        # this code is called everytime "=new car()" is called
+    }
+    
+    
+         public function getPurchase_ID()
+    {
+        return $this->purchaseId;
+        
+    }
     
      public function getPurchaseQuantity()
     {
@@ -53,6 +88,21 @@ class Purchase {
     
     
     
+         public function getPurchaseCustomer_ID()
+    {
+        return $this->customer_id;
+        
+    }
+    
+    
+  public function getPurchaseProduct_Id()
+    {
+        return $this->product_id;
+        
+    }
+    
+
+    
     public function getPurchaseComments()
     {
         return $this->purchaseComment;
@@ -72,6 +122,37 @@ class Purchase {
                 return "";
             }
     }
+    
+    
+        function save()
+    {
+        global $connection;
+            #Call the Stored Procedure  CALL car_insert(:brand, :year, :transmission)
+           $SQLQuery = "INSERT INTO Purchases (customer_id,  product_id, purchase_quantity, purchase_comments)" .
+                "VALUES (:customer_id, :product_id, :purchase_quantity, :purchase_comments);";
+            
+           $PDOStatement = $connection->prepare($SQLQuery);
+           $PDOStatement->bindParam(":customer_id", $this->customer_id);
+           $PDOStatement->bindParam(":product_id", $this->product_id);
+           $PDOStatement->bindParam(":purchase_quantity", $this->purchaseQuantity);
+           $PDOStatement->bindParam(":purchase_comments", $this->purchaseComment);
+           $PDOStatement->execute();
+          
+           return true;
+        }
+        
+                function delete($new_purchase_id)
+    {
+        global $connection;
+            #Call the Stored Procedure  CALL car_insert(:brand, :year, :transmission)
+           $SQLQuery = "DELETE FROM Purchases WHERE Purchase_ID= :Purchase_ID";
+            
+       $PDOStatement = $connection->prepare($SQLQuery);
+       $PDOStatement->bindParam(":Purchase_ID", $new_purchase_id);
+       $PDOStatement->execute();
+          
+           return true;
+        }
     
     
 }
