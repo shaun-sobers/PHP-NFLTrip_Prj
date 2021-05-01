@@ -13,12 +13,14 @@ require_once 'Customer.php';
  *
  * @author Shaun
  */
+
+// creates the customer Collection filled with all the customers from the customer table , stores them in the array, with the id being the customer id
 class Customers extends Collection {
     function __construct() {
         global $connection;
         
         #call the SP
-        $SQLQuery = "SELECT customer_id, firstname, lastname, address, city, province, postalcode, customer_login, customer_password FROM customers";
+        $SQLQuery = "Call Customer_SelectAll()";
         
         $PDOStatement= $connection->prepare($SQLQuery);
         $PDOStatement->execute();

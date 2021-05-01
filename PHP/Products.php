@@ -13,13 +13,15 @@ require_once 'Product.php';
  *
  * @author Shaun
  */
+
+// creates the products Collection filled with all the products from the products table , stores them in the array, with the id being the product id
 class Products extends Collection{
     
         function __construct() {
         global $connection;
         
         #call the SP
-        $SQLQuery = "SELECT product_id, product_code , product_description, product_price FROM products";
+        $SQLQuery = "Call Product_SelectAll()";
         
         $PDOStatement= $connection->prepare($SQLQuery);
         $PDOStatement->execute();

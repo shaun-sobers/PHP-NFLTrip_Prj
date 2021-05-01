@@ -18,6 +18,12 @@
 #constants Declaration
 define("FOLDER_PHP_FUNCTIONS","PHP/");
 define("FILE_PHP_FUNCTIONS", FOLDER_PHP_FUNCTIONS."functions.php");
+require_once 'PHP/Customer.php';
+require_once 'PHP/Customers.php';
+require_once 'PHP/Product.php';
+require_once 'PHP/Products.php';
+require_once 'PHP/Purchases.php';
+require_once 'PHP/Purchase.php';
 $team="";
 
 #import functions
@@ -30,7 +36,7 @@ createPageHeader("Sales Page");
 $team=TeamSelect();
 
 #Create the Customer Information Form
-CustomerInfoDiv($team);
+newpurchaseform($team);
 
 ##Create the page footer
 createPageFooter();

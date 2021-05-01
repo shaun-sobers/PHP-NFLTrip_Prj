@@ -11,6 +11,8 @@
  *
  * @author Shaun
  */
+
+// Creates the parent class that the plural class extend
 class Collection {
 
     public $items = array();

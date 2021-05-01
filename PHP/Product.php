@@ -20,10 +20,12 @@ class Product
     private $costPrice = 0.00;
     
     
+    // delcaring functions
     const PRODUCT_CODE_MAX_LENGTH = 12; 
     const PRODUCT_PRICE_MAX_LENGTH = 10000.00; 
     
     
+    // default constructor with parameters
         function __construct($new_product_id= "", $new_product_code="", $new_product_description="", $new_product_price="") 
     {
 
@@ -34,8 +36,10 @@ class Product
             $this-> costPrice= 0;
        
 
-        # this code is called everytime "=new car()" is called
+        # this code is called everytime "=new product()" is called
     }
+    
+        // getter for product id
     
                 public function getProductID()
     {
@@ -43,6 +47,8 @@ class Product
         
     }
     
+    
+    // setter for product id
     public function setProductID($newProductID)
     {
                 $this->productid = $newProductID;
@@ -54,12 +60,15 @@ class Product
     
     
     
+                // getter for product code
             public function getProductCode()
     {
         return $this->productCode;
         
     }
     
+    
+    // setter for product code with validation
     public function setProductCode($newProductCode)
     {
         if(mb_strlen($newProductCode) == 0)
@@ -84,12 +93,15 @@ class Product
     
     
     
+    
+    // getter for product description
     public function getProductDescription()
     {
         return $this->productDescription;
         
     }
     
+    // setter for product description with validations
     public function setProductDescription($newProductDescription)
     {
         if(mb_strlen($newProductDescription) == 0)
@@ -116,12 +128,16 @@ class Product
     
     
     
+    
+    // getter for product price
         public function getProductPrice()
     {
         return $this->productPrice;
         
     }
     
+    
+    // setter for product price with validation
     public function setProductPrice($newProductPrice)
     {
         if(mb_strlen($newProductPrice) == 0)
@@ -147,12 +163,15 @@ class Product
     
     
     
+    // getter for cost price
         public function getCostPrice()
     {
         return $this->costPrice;
         
     }
     
+    
+    // setter for cost price
     public function setCostPrice($newCostPrice)
     {
         
@@ -162,12 +181,14 @@ class Product
     }
 
     
+    
+    // load function that selects a product given the prduct id, and returns the info into the product object
        function load($product_id)
     {
        global $connection;
        
        #call your STORED PROCEDURE
-       $SQLQuery = "SELECT product_id, product_code , product_description, product_price FROM products WHERE product_id = :product_id";
+       $SQLQuery = "Call Product_Select(:product_id)";
        
        $PDOStatement = $connection->prepare($SQLQuery);
        $PDOStatement->bindParam(":product_id", $product_id);

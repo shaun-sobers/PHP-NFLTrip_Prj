@@ -46,7 +46,7 @@ define('PRICE_MAX',10000);
 define('QUANTITY_MAX',99);
 define('QUANTITY_MIN',0);
 define ("AMOUNT_NUMBER_OF_DECIMAL", 2);
-define ("TAX_RATE", 12.05);
+define ("TAX_RATE", 15.2);
 define ("SPECIAL_AD", NIKE_LOGO);
 define ("PURCHASE_TEXT" , FOLDER_DATA."purchases.txt");
 define("CHEAT_SHEET_LINK",FOLDER_DATA."Notes.txt");
@@ -87,9 +87,7 @@ function createNavBar()
   <a href="#home" onclick="window.location.href='index.php'">Home</a>
   <a href="#home" onclick="window.location.href='ShopPage.php'">Shop</a>
 <a href="#home" onclick="window.location.href='OrderPage.php'">Orders</a>
-<a href="#home" onclick="window.location.href='Tester.php'">Tests</a>
 <a href="#home" onclick="window.location.href='Account.php'">Update Account</a>
-<a href="#home" onclick="window.location.href='Login.php'">Login</a>
 <img src="<?php echo SOBZ_LOGO ?>"/>  
 </div>
 
@@ -629,7 +627,7 @@ $quantity="";
      ?>
      
      <!-- This is a form with all the 32 NFL team as options -->
-        <form action="" method="post">
+        <form method="post">
             <select name="Football">
                 <option value="" disabled selected>Choose option</option>
                 <option value="Arizona">Arizona Cardinals</option>
@@ -897,9 +895,13 @@ while (!feof($file)){
 
  }
  
+ 
+ //  creates the register form
  function createRegisterPage()
  {
+   
      
+     // declaring the global variables used
 global $firstName;
 global $lastName;
 global $address;
@@ -919,7 +921,7 @@ global $errorUsername;
 global $errorPassword;
 
 
-//This checks if the submitinfo object has be altered
+//This checks if the register object has be altered
                if(isset($_POST["register"])){
 
 
@@ -952,7 +954,7 @@ $errorPassword= $customer->setPassword($password);
         {
 
 
-            //$customer($firstName, $lastName, $address, $city, $province, $postalcode, $username, $password);
+            $customer($firstName, $lastName, $address, $city, $province, $postalcode, $username, $password);
             $customer->save();
 
             // Confirmation message once there is no errors after submission
@@ -1038,10 +1040,11 @@ $errorPassword= $customer->setPassword($password);
  }
  
  
- 
+ // creating the update form
  function UpdateAccountPage()
  {
      
+     // declaring the global variables
 global $firstName;
 global $lastName;
 global $address;
@@ -1195,23 +1198,16 @@ $errorID=$customer->setCustomerID($customer_id);
             
  }
 
-function loadcustomer(){
-    $customer = new Customer();
-    $customer->load("11edec05-a3d9-11eb-a825-9078415069cc");
-    
-    echo $customer->getFirstName();
-    echo $customer->getCustomerID();
-}
 
+// creates the logout form
 function createLogoutForm()
 {
     
-    
+    // checks if the logout object was alter
      if(isset($_POST["logout"]))
     {
-        // session_start();
+         // if the logout was altered we destroy the session which will lose the customer id from the $Session tag
         session_destroy();
-        //unset($_SESSION['customer_id']);
         header("Location:index.php");
         echo "Thank you";
         
@@ -1232,17 +1228,21 @@ function createLogoutForm()
 
 }
 
+// creates the form which display the logout and login functions
 function LoginLogout()
 {
     session_start();
+    // if the session is created, show the logout form
     if(isset($_SESSION["customer_id"]))
         createLogoutForm ();
     else{
+        // if the session is not created, show the log in form
       createLoginForm ();
     }
 
 }
 
+// creates the login form
 function createLoginForm()
 {
     
@@ -1257,7 +1257,7 @@ $loginmessgae=$customer->login($username, $password);
 
 
 
-        // Validations for all fields within the form
+        
         // This checks if the error messages are empty... If all error messages are empty, this means the infomration entered was valid, and we can proceed to next step
         if ($loginmessgae == "")
         {
@@ -1265,15 +1265,14 @@ $loginmessgae=$customer->login($username, $password);
             echo "Welcome (" .$customer->getFirstName(). ") , " .$customer->getLastName();
             if($customer->getCustomerID() != ""){
                 
-                //session_start();
+                
                 
                 $_SESSION['customer_id']= $customer->getCustomerID();
             ?> <p> Home </p> <a href='index.php'>Home Page</a><?php
             }
 
             
-           // echo $_SESSION['customer_id'];
-
+      
            
         }
         
@@ -1284,8 +1283,10 @@ $loginmessgae=$customer->login($username, $password);
     ?>
       <div class="login-container">
           <form method='POST'>
-      <input type="text" placeholder="Username" name="username">
-      <input type="password" placeholder="Password" name="password">
+              <label for="Username"> Username: </label>
+              <input type="text" placeholder="Username" name="username"><br>
+              <label for="password">Password: </label>
+              <input type="password" placeholder="Password" name="password"><br>
       <button type="submit" name="login">Login</button><br>
       <p> Need a user account ? <a href="RegisterPage.php"> Register</a> </p>
 
@@ -1304,24 +1305,12 @@ $loginmessgae=$customer->login($username, $password);
 }
 
 
-function login ()
-{
- $customer = new Customer();
- $loginresults= $customer->login("shaun_sobers", "hello");
- 
- if ($loginresults == ""){
-     echo "Hello ". $customer->getFirstName();
- }
- else {
-     echo "please retry";
- }
-}
-
+// creates the Delete table which shows all the purchases from a specific customer
 function createUserTable()
 {
     
-    
-    if(isset($_POST['purchase_id'])){
+// if the delete_btn was set, we store the purchase id, and call the purchase delete procedure which will delete that purchase from the purchase database
+    if(isset($_POST['delete_btn'])){
         $purchase_id = $_POST['purchase_id'];
         $p1= new Purchase();
         if($p1->delete($purchase_id)){
@@ -1331,6 +1320,7 @@ function createUserTable()
         }
     }
     
+    // creates the table
    echo "<table style='border:1px solid black'>
   <tr>
    <th>Delete</th>
@@ -1348,9 +1338,11 @@ function createUserTable()
  
    
    $purchases = new Purchases();
-   
+   // creates the purchases() list which contains the purchases from a specfic customer
    foreach ($purchases->items as $purchase)
    { 
+       
+       // creates the variables used for the table
        echo "<tr>";
        $customer= new Customer();
        $product = new Product();
@@ -1362,21 +1354,10 @@ function createUserTable()
        $taxes = computeTaxes($subtotal);
        $grandtotal=  calculateTotal($subtotal, $taxes);
        
-       
-//       echo "Purchase ID: ".$purchase->getPurchase_ID();
-//       echo "First Name: ".$customer->getFirstName();
-//       echo "Last Name: ".$customer->getLastName();
-//       echo "Customer City: " .$customer->getCustomerCity();
-//       echo "Comments :" .$purchase->getPurchaseComments();
-//       echo "Price: " .$product->getProductPrice();
-//       echo "Product Id : " .$purchase->getPurchaseProduct_Id();
-//       echo "Quantity: " .$quantity;
-//       echo "Subtotal: " .$subtotal;
-//       echo "Taxes: " .$taxes;
-//       echo "GrandTotal: " .$grandtotal;
-//       
+
+       // echos the variables into the table rows
         echo "<form action='Tester.php' method='post'>"; 
-      echo "<td> <button type='submit' name='purchase_id' value='".$purchase->getPurchase_ID()."'>Delete</button></td>";
+      echo "<td> <button type='submit' name='delete_btn' value='".$purchase->getPurchase_ID()."'>Delete</button></td>";
       echo "</form>";
       echo "<input type='hidden' name='purchase_id' value='" . $purchase->getPurchase_ID() ."'>";
       echo "<td>".$purchase->getPurchaseProduct_Id()."</td>";
@@ -1399,60 +1380,171 @@ echo "</table>
 </form>";
 }
 
-function createUpdateForm()
+
+// created the updated purchase form  with information from the database
+function newPurchaseform($team) {
+        if(!isset($_SESSION["customer_id"])){
+       echo "<script type='text/javascript'>alert('Please Login to continue purchase');</script>";
+    } else{
+    
+    
+ $products= new Products();
+ global $quantity;
+ global $comments;
+ global $errorquantity;
+ $customer = new Customer;
+ $customer_id= $_SESSION["customer_id"];
+ $customer->load($customer_id);
+ 
+      if(isset($_POST["Buy"]))
+    {
+
+
+         $product = new Product();
+         $product->load($_POST['product_id']);
+          $quantity = $_POST['quantity'];
+          $comments= $_POST["comments"];
+        $purchase1 = new Purchase();  
+       $errorquantity = $purchase1->setPurchaseQuantity($quantity);
+
+
+       
+       if ($errorquantity ==""){
+   
+        $productPrice = $product->getProductPrice();
+        $subtotal= calculateSubtotal($productPrice,$quantity);
+       $taxes = computeTaxes($subtotal);
+       $grandtotal=  calculateTotal($subtotal, $taxes);
+
+         $newpurchase = new Purchase($quantity, $comments, $_SESSION["customer_id"], $product->getProductID(), "", $productPrice, $taxes, $subtotal, $grandtotal, $customer->getFirstName(), $customer->getLastName(), $customer->getCustomerCity());
+         
+         
+         $newpurchase->save();
+        echo "Purchase was sucessfully made";
+       }
+          
+
+    
+      }
+ ?>
+
+
+<?php
+ echo "<div class='infocustomer'>";
+echo "<form class='".$team."' method='POST'>";
+echo "<div style='color:red'>*</div>";
+echo "<label for='product_id'>Products </label>";
+ echo "<select name='product_id' id='products'>";
+   foreach($products->items as $product)
+   {
+       echo "<option value='".$product-> getProductID()."'>".$product-> getProductCode()." - ".$product-> getProductDescription()." ($ ".$product-> getProductPrice().")</option>";
+   }
+ echo "</select>";
+ 
+ 
+ ?>
+          <br> <br><label for="fname">Comments</label>
+     <input type="text" id="comments" name="comments"><br>
+     
+            
+     <div style="color:red">*</div>
+                 <label for="fname">Quantity</label>
+            <input type="text" id="quantity" name="quantity">
+                           <span style="color:red"><?php echo $errorquantity; ?></span><br><br>
+            
+           <!-- Section for the legend, which shows Which sections must not be empty -->
+            <div style="color:red">* = required</div>
+            <button type="submit" name="Buy">Buy</button><br>
+</form>
+<?php
+echo "</div>";
+}
+
+}
+
+
+// creates the search form which searches for the purchases from a specific date
+function createDateSearchform()
 {
-    ?>
-     <form action="index.php" method="post">
-            Show purchases made on this date or later: <input name="year">
-            <input type="submit" name="search" value="Search by date">
-        </form>
+    if(!isset($_SESSION["customer_id"])){
+       echo "<script type='text/javascript'>alert('Please Login to see purchases');</script>";
+    } else
+    
+    {
+
+    $customer_id= $_SESSION["customer_id"];
+
+     echo "<form method='post'>
+            Show purchases made on this date or later: <input name='date' placeholder='" . date("Y/m/d") . "'>
+            <input type='submit' name='search' value='Search by date'>
+        </form>";
        
-        <?php
        
-        if(isset($_POST["update"]))
+              if(isset($_POST["purchase_id"]))
         {
-            $customer = new Customer();
-           
-            if($customer->load($_POST["customer_id"]))
-            {
-                $customer->setYear($_POST["newYear"]);
-               
-                $customer->save();
-            }
+        $purchase_id = $_POST['purchase_id'];
+        $p1= new Purchase();
+        if($p1->delete($purchase_id)){
+            echo"Thank you, your purchase id: (".$purchase_id.") was successfully deleted";
+        }else {
+            echo"could not delete";
         }
-       
+        
+        }
+
         if(isset($_POST["search"]))
         {
-            $cars = new cars($_POST["year"]);
-       
-            echo "<table style='border:1px solid black '>";
-       
-        ?>
-            <tr>
-                <th>Brand</th>
-                <th>Year</th>
-                <th>Update</th>
-            </tr>
-       
-        <?php
-        foreach($cars->items as $car)
-        {
-            echo "<tr>";
-           
-            echo "<td>" . $car->getBrand() . "</td>";
-            echo "<td>" . $car->getYear() . "</td>";
-           
-            echo "<td><form action='index.php' method='post'>"
-            . '<br><input type="text name="newYear">'
-            . '<br><input type="submit" name="update" value="Modify the year">'
-            . '<br><input type="hidden" name="car_id value="' . $customer->getCustomerID() . '">'
-            . "</form></td>";
-           
-            echo "</tr>";
-        }
-       
-        echo "</table>";
-        }
+            $purchases = new Purchases();
+            $purchases->loadCustomerPurchases($customer_id, $_POST["date"]);
+          
+            
+               echo "<table style='border:1px solid black'>
+  <tr>
+   <th>Delete</th>
+    <th>Product Code</th>
+     <th>First Name</th>
+      <th>Last Name</th>
+       <th>City</th>
+        <th>Comments</th>
+         <th>Price</th>
+          <th>Qty</th>
+           <th>Subtotal</th>
+            <th>Taxes</th>
+             <th>Grand Total</th>
+  </tr>";
+ 
+   
+        
+   
+   foreach ($purchases->items as $purchase)
+   { 
+       echo "<tr>"; 
+        echo "<form method='post'>
+      <td> <button type='submit'  value='".$purchase->getPurchase_ID()."'>Delete</button></td>
+      <input type='hidden' name='purchase_id' value='" . $purchase->getPurchase_ID() ."'>
+    <td>".$purchase->getPurchaseProduct_Id()."</td>
+    <td>".$purchase->getPurchase_CustomerFname()."</td>
+    <td>".$purchase->getPurchase_CustomerLname()."</td>
+    <td>".$purchase->getPurchase_CustomerCity()."</td>
+    <td>".$purchase->getPurchaseComments()."</td>
+    <td>".$purchase->getPurchasePrice()."</td>
+    <td>".$purchase->getPurchaseQuantity()."</td>
+    <td>".$purchase->getPurchaseSubtotal()."</td>
+    <td>".$purchase->getPurchaseTax()."</td>
+    <td>".$purchase->getPurchaseGrandTotal()."</td>
+
+    </tr>";
+      
+   }
+   
+
+echo "</table>"
+   . "</form>";
+ 
+    
+
+}
+}
 }
 
 

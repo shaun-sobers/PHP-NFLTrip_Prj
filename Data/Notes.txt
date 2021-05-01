@@ -1,6 +1,6 @@
 - Download Xamp( From apachefriend.org)
 	-Download for Windows ( Not Version 8.0.0)
-	-Click other vesions
+	-Click othervesions
 	- If it doesnt work download 7.4.13
 	- When done, do not excecute
 	- Check the checksum to make sure it is not fake.
@@ -178,3 +178,147 @@ Revision History:
 
 ** POST: ussed by the code only (not in the browser history)
 ** GET: used by the code, but also in the URL
+
+
+
+MYSQL (Port 3306)... MariaDB
+
+Make your MYSQL installation more secure:
+1- Open command prompt
+2- c:\xampp\mysql\bin\mysql.exe -u root -p
+password: (just press enter)
+3-MYSQL -> select @@version;
+
+4- exit;
+
+OUTPUT:
+
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 8
+Server version: 10.4.17-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> select @@version;
++-----------------+
+| @@version       |
++-----------------+
+| 10.4.17-MariaDB |
++-----------------+
+1 row in set (0.000 sec)
+
+MariaDB [(none)]>
+
+
+Make the installation more secure
+1) c:\xampp\mysql\bin\mysqladmin.exe -u root -p
+
+SET A PASSWORD FOR ROOT !!!!
+
+Make mySQL accessible only from localhost: yes
+
+PHP myAdmin password: as you wish
+
+set mySQL root password : yes dont use an empty password !!!! WRITE DOWN PASSWORD
+
+set password for FTP: as you wish
+
+New password: "ABC123";
+
+--- TO CHANGE PASSWORD
+c:\xampp\mysql\bin\mysql.exe -u root -p
+
+	Type password then press ENTER
+----
+to modify an existing password:
+
+c:\xampp\mysql\bin\mysql.exe -u root -p
+
+	Type the OLDPASSWORD and press Enter
+
+use mysql;
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'NEWPASSWORD';
+flush priviliges; 	#or stop/start mySQL
+exit;
+
+
+In MariaDB:
+
+	- ci : case insensitive
+	- ai : accent insenstive
+
+Allowed characters:
+
+- 0-9
+- a-z
+- A-Z
+- $
+-
+
+	recommended: a-z , underscore
+
+Tick: grave accent
+
+
+In the DB, the keyword link, adds another table into your current table
+
+-------- 
+1) click the 2 faces (manage users)
+2) click add(+)
+3) enter username
+4) enter password twice
+5) ckick add objects
+6) add all your SP and views
+7) click the 1st permission only (SELECT for view, EXECUTE for the SP)
+8) Save
+
+this will restrict the permissions of the users accessing the DB
+
+---------
+Exporting DB
+
+-right click on db, click on export DataBase
+-make sure your DB is checked
+- Datebase(s) ... check "Create"
+- Tables(s) ... check "Create"
+- Data: Insert
+- Output: Single.sql file
+- Filename: give it a name, and click on the folder to select where you would like to save it
+- Click export
+
+
+---------
+
+Grant permission
+
+In a query write "SHOW GRANTS FOR 'website'@'localhost';"
+
+run the query,
+
+Select all the files(ctrl-a)
+
+Right click, click save as, click txt
+
+open a notepad, paste the Grants
+
+save txtfile in folder with DB-sql file.
+
+---------------------------------------------------------
+
+PDO (PHP Data Objects) : 12 Databases
+
+will raise errors and exceptions
+
+
+
+mySQLi (imporved) can connect only to mySQL databases
+
+
+        if(window.XMLhttpRequest)
+            xhr = new XMLHttpRequest();
+        
+        Google Chrome: open source code + proprierty code
+        Chromium : open source code

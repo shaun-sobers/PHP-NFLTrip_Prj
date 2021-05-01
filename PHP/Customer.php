@@ -28,9 +28,12 @@ class Customer {
     const USERNAME_MAX_LENGTH = 12;
     const PASSWORD_MAX_LENGTH = 255; 
 
+    
+    // default constuctor with parameters
     function __construct($new_firstName = "", $new_lastName = "", $new_customer_address= "", $new_customer_city = "", $new_customer_province = "", $new_postal_code = "", $new_username= "", $new_password= "") 
     {
 
+            // goes through validations before they are set
             $this->setFirstName($new_firstName);
             $this->setLastName($new_lastName);
             $this->setCustomerCity($new_customer_city);
@@ -45,12 +48,14 @@ class Customer {
     }
     
     
+    // getter for customer id
             public function getCustomerID()
     {
         return $this->customer_id;
         
     }
     
+    // setter for customer id with the vadliation
     public function setCustomerID($newCustomerID)
     {
         if(mb_strlen($newCustomerID) == 0)
@@ -66,12 +71,15 @@ class Customer {
     
     
     
+        // getter for first name
         public function getFirstName()
     {
         return $this->firstName;
         
     }
     
+    
+    // setter for first name with validation
     public function setFirstName($newFname)
     {
         if(mb_strlen($newFname) == 0)
@@ -95,13 +103,14 @@ class Customer {
     
     
     
-    
+    // getter for last name
      public function getLastName()
     {
         return $this->lastName;
         
     }
     
+    // setter for last name with parameter
     public function setLastName($newLname)
     {
         if(mb_strlen($newLname) == 0)
@@ -126,12 +135,14 @@ class Customer {
     
     
     
+    // getter for customer city
             public function getCustomerCity()
     {
         return $this->customer_city;
         
     }
     
+    // setter for customer city with validation
     public function setCustomerCity($newCustomerCity)
     {
         if(mb_strlen($newCustomerCity) == 0)
@@ -159,12 +170,15 @@ class Customer {
     
     
     
+    // getter for customer address
                 public function getCustomerAddress()
     {
         return $this->customer_address;
         
     }
     
+    
+    // setter for customer address with validation
     public function setCustomerAddress($newCustomerAddress)
     {
         if(mb_strlen($newCustomerAddress) == 0)
@@ -189,12 +203,14 @@ class Customer {
     
     
     
+    // getter for customer postal code
      public function getCustomerPostalCode()
     {
         return $this->postal_code;
         
     }
     
+    // setter for customer postal code with validation
     public function setCustomerPostalCode($newCustomerPostalCode)
     {
         if(mb_strlen($newCustomerPostalCode) == 0)
@@ -221,12 +237,14 @@ class Customer {
     
     
     
+    // getter for customer province
      public function getCustomerProvince()
     {
         return $this->customer_province;
         
     }
     
+    // setter for customer province with validations
     public function setCustomerProvince($newCustomerProvince)
     {
         if(mb_strlen($newCustomerProvince) == 0)
@@ -249,12 +267,16 @@ class Customer {
     }
     
     
+    
+    // getter for username
                 public function getUsername()
     {
         return $this->username;
         
     }
     
+    
+    // setter for username with validation
     public function setUsername($newUsername)
     {
         if(mb_strlen($newUsername) == 0)
@@ -278,12 +300,14 @@ class Customer {
     
     
     
+        // getter for password
                 public function getPassword()
     {
         return $this->password;
         
     }
     
+    // setter for password with validation
     public function setPassword($newPassword)
     {
         if(mb_strlen($newPassword) == 0)
@@ -299,18 +323,19 @@ class Customer {
             }
             else
             {
-                $this->password= $newPassword;
+            $encrypted_password = password_hash($newPassword, PASSWORD_DEFAULT);
+                $this->password= $encrypted_password;
                 return "";
             }
         }
     }
  
+        // save function that inserts the object information into the customer table
         function save()
     {
         global $connection;
             #Call the Stored Procedure  CALL car_insert(:brand, :year, :transmission)
-           $SQLQuery = "INSERT INTO customers (firstname, lastname, address, city, province, postalcode, customer_login, customer_password)" .
-                "VALUES (:firstname, :lastname, :address, :city, :province, :postalcode, :customer_login, :customer_password);";
+           $SQLQuery = "Call Customer_Add(:firstname, :lastname, :address, :city, :province, :postalcode, :customer_login, :customer_password)";
             
            $PDOStatement = $connection->prepare($SQLQuery);
            $PDOStatement->bindParam(":firstname", $this->firstName);
@@ -326,18 +351,13 @@ class Customer {
            return true;
         }
         
-    
+        // update function that updates an existing customer in the customer table
         function update($customer_id)
     {
         global $connection;
             #Call the Stored Procedure  CALL car_insert(:brand, :year, :transmission)
-            $SQLQuery = "UPDATE customers SET firstname = :firstname, lastname= :lastname, address= :address, city= :city , province= :province, postalcode= :postalcode, " .
-                    "customer_login = :customer_login, customer_password = :customer_password " .
-                    "WHERE customer_id = :customer_id;";
-            
-//            UPDATE customers SET firstname = 'Josh', lastname= 'Man', address= 'BA', city= 'MA' , province= 'LA', postalcode= 'MLA'
-//,customer_login = 'LA', customer_password = 'KSn'  WHERE customer_id = '7beeb3fc-a48c-11eb-a825-9078415069cc';
-            
+        
+        $SQLQuery="Call Customer_Update(:firstname, :lastname, :address, :city, :province, :postalcode, :customer_login, :customer_password, :customer_id)";
            $PDOStatement = $connection->prepare($SQLQuery);
 
            
@@ -356,12 +376,15 @@ class Customer {
         }
         
         
+        // load function that returns information from an existing customer in the customer table
             function load($customer_id)
     {
        global $connection;
        
        #call your STORED PROCEDURE
-       $SQLQuery = "SELECT customer_id, firstname, lastname, address, city, province, postalcode, customer_login, customer_password   FROM customers WHERE customer_id = :customer_id";
+       
+       $SQLQuery="Call Customer_Select(:customer_id)";
+     
        
        $PDOStatement = $connection->prepare($SQLQuery);
        $PDOStatement->bindParam(":customer_id", $customer_id);
@@ -385,12 +408,13 @@ class Customer {
     }
     
     
+    // login function that returns the password and customer id for an existing customer, given the customer username
     function login($customer_username, $customer_password)
     {
        global $connection;
        
        #call your STORED PROCEDURE
-       $SQLQuery = "SELECT customer_id, firstname, lastname, address, city, province, postalcode, customer_login, customer_password   FROM customers WHERE customer_login = :customer_login";
+       $SQLQuery= "Call Customer_Login(:customer_login)";
        
        $PDOStatement = $connection->prepare($SQLQuery);
        $PDOStatement->bindParam(":customer_login", $customer_username);
@@ -399,27 +423,19 @@ class Customer {
        if($row = $PDOStatement->fetch())
        {    
             
-           $this->username = $row["customer_login"];
+
            $this->password = $row["customer_password"];
            
-           
-           if($this->password == $customer_password)
+            
+           if(password_verify($customer_password, $this->password))
            {
            $this->customer_id = $row["customer_id"];
-           $this->firstName = $row["firstname"];
-           $this->lastName = $row["lastname"];
-           $this->customer_address= $row["address"];
-           $this->customer_city = $row["city"];
-           $this->customer_province = $row["province"];
-           $this->postal_code= $row["postalcode"];
-           $this->username = $row["customer_login"];
-           $this->password = $row["customer_password"];
            return "";
            }
 
            
            
-           if ($this->password != $customer_password)
+           else
            {
                return "The password is incorrect";
            }
