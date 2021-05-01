@@ -13,7 +13,12 @@ require_once 'Customer.php';
  *
  * @author Shaun
  */
-
+  # (Shaun Sobers (1933337) 25/04/2021 ... Created Customers class
+  # (Shaun Sobers (1933337) 25/04/2021 ... Created validations
+ # (Shaun Sobers (1933337) 25/04/2021 ... Connected classes to db
+ # (Shaun Sobers (1933337) 25/04/2021 ... Tested Cusomers object
+ #  
+ #  
 // creates the customer Collection filled with all the customers from the customer table , stores them in the array, with the id being the customer id
 class Customers extends Collection {
     function __construct() {

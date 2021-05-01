@@ -13,7 +13,10 @@ require_once 'Product.php';
  *
  * @author Shaun
  */
-
+  # (Shaun Sobers (1933337) 25/04/2021 ... Created products class
+  # (Shaun Sobers (1933337) 25/04/2021 ... Created validations
+ # (Shaun Sobers (1933337) 25/04/2021 ... Connected classes to db
+ # (Shaun Sobers (1933337) 25/04/2021 ... Tested products object
 // creates the products Collection filled with all the products from the products table , stores them in the array, with the id being the product id
 class Products extends Collection{
     

@@ -3,6 +3,8 @@ require_once 'connectionDB.php';
 require_once 'Collection.php';
 require_once 'Purchase.php';
 /*
+ * 
+ * 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -13,6 +15,11 @@ require_once 'Purchase.php';
  *
  * @author Shaun
  */
+
+  # (Shaun Sobers (1933337) 25/04/2021 ... Created purchases class
+  # (Shaun Sobers (1933337) 25/04/2021 ... Created validations
+ # (Shaun Sobers (1933337) 25/04/2021 ... Connected classes to db
+ # (Shaun Sobers (1933337) 25/04/2021 ... Tested purchases object
 class Purchases extends Collection {
 //   
 //            function __construct() {

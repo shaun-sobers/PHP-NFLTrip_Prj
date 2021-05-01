@@ -10,6 +10,12 @@
  * Description of Customer
  *
  * @author Shaun
+ * 
+ * # (Shaun Sobers (1933337) 25/04/2021 ... Created Customer class
+ *  *  * # (Shaun Sobers (1933337) 25/04/2021 ... Created validations
+ *  * # (Shaun Sobers (1933337) 25/04/2021 ... Connected classes to db
+ *  * # (Shaun Sobers (1933337) 25/04/2021 ... Tested customer object
+
  */
 class Customer {
     private $customer_id = "";#$this-> is used to access regular variables

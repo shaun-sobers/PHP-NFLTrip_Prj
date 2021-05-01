@@ -11,6 +11,11 @@
  *
  * @author Shaun
  */
+
+  # (Shaun Sobers (1933337) 25/04/2021 ... Created purchase class
+  # (Shaun Sobers (1933337) 25/04/2021 ... Created validations
+ # (Shaun Sobers (1933337) 25/04/2021 ... Connected classes to db
+ # (Shaun Sobers (1933337) 25/04/2021 ... Tested purchase object
 class Purchase {
     
 

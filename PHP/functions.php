@@ -13,6 +13,8 @@
 #Shaun Sobers (193337) 2021-03-13  Fixed table , and Command functions on Order Page, fixed error in Compute Taxes function, fixed CSS on Index, Shop and Order Page, added more comments, changed project name to student id number
 #Shaun Sobers (193337) 2021-03-13 Completed the error handling function;
 #Shaun Sobers (193337) 2021-03-13 Completed the entire project at 100%
+# (Shaun Sobers (1933337) 25/04/2021 ... Created login/ log out form function
+# (Shaun Sobers (1933337) 29/04/2021 ...  Fixed functionalities on forms
 
 
 #declare a constant
