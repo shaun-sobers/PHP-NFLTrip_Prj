@@ -59,6 +59,7 @@ define("CHEAT_SHEET_LINK",FOLDER_DATA."Notes.txt");
 function createPageHeader($title){
     createCache();
     errorHandling();
+    //secureconnection();
     ?>
 <!DOCTYPE html>
 <?php
@@ -70,6 +71,7 @@ function createPageHeader($title){
         <link rel="stylesheet" type="text/css" href="<?php echo FILE_CSS ?>">
         <script language="javascipt" type="text/javascript" src="<?php echo FILE_JAVASCRIPT ?>"></script> 
         <meta charset="UTF-8">
+        
         <title><?php echo $title ?></title>
          <?php createNavBar();
          ?>
@@ -1211,6 +1213,7 @@ function createLogoutForm()
          // if the logout was altered we destroy the session which will lose the customer id from the $Session tag
         session_destroy();
         header("Location:index.php");
+        die();
         echo "Thank you";
         
     }
@@ -1500,7 +1503,7 @@ function createDateSearchform()
             $purchases->loadCustomerPurchases($customer_id, $_POST["date"]);
           
             
-               echo "<table style='border:1px solid black'>
+               echo "<table style='border:1px solid white'>
   <tr>
    <th>Delete</th>
     <th>Product Code</th>
@@ -1529,11 +1532,11 @@ function createDateSearchform()
     <td>".$purchase->getPurchase_CustomerLname()."</td>
     <td>".$purchase->getPurchase_CustomerCity()."</td>
     <td>".$purchase->getPurchaseComments()."</td>
-    <td>".$purchase->getPurchasePrice()."</td>
+    <td> $".$purchase->getPurchasePrice()."</td>
     <td>".$purchase->getPurchaseQuantity()."</td>
-    <td>".$purchase->getPurchaseSubtotal()."</td>
-    <td>".$purchase->getPurchaseTax()."</td>
-    <td>".$purchase->getPurchaseGrandTotal()."</td>
+    <td> $".$purchase->getPurchaseSubtotal()."</td>
+    <td> $".$purchase->getPurchaseTax()."</td>
+    <td> $".$purchase->getPurchaseGrandTotal()."</td>
 
     </tr>";
       
@@ -1586,4 +1589,14 @@ function  calculateSubtotal($price,$quantity){
 function calculateTotal($subtotal, $taxes)
 {
             return round(($subtotal+$taxes), AMOUNT_NUMBER_OF_DECIMAL);
+}
+
+function secureconnection(){
+    if (! isset($_SERVER["HTTPS"]) || $_SERVER["HTTPS"] != "on")
+{
+    
+    $http_host = str_replace(":8088", ":4433",  $_SERVER["HTTP_HOST"]);
+    header('Location: https://' .$http_host. $_SERVER["REQUEST_URI"]);
+    exit();
+}
 }

@@ -14,6 +14,7 @@
 #Shaun Sobers (193337) 2021-03-13 Completed the error handling function;
 #Shaun Sobers (193337) 2021-03-13 Completed the entire project at 100%
 # (Shaun Sobers (1933337) 29/04/2021 ... Fixed up functions, added forms to proper pages, checked $_Session sessions on each page
+#(Shaun Sobers (1933337) 30/04/2021 ... Wrote comments on pages and updated functions/code
 
 
 #constants Declaration

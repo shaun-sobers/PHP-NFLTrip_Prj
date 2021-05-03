@@ -104,8 +104,15 @@ class Purchase {
         {
             if($newPurchaseQuantity > self::PURCHASE_MAX_QUANTITY)
             {
-                #use Constant!
-                return "Your Quantity cannot be larger than " . self::PURCHASE_MAX_QUANTITY . " characters!";
+                
+                return "Your Quantity cannot be larger than " . self::PURCHASE_MAX_QUANTITY . "!";
+            }
+            // vadliating that quantity is a full number
+            if (str_contains($newPurchaseQuantity, ".")){
+                return "Your number must be a full number";
+            }
+            if (!is_numeric($newPurchaseQuantity)){
+                return "Please enter a number, not a charcter or string";
             }
             else
             {

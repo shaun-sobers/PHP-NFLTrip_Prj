@@ -1,0 +1,428 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               10.4.18-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win64
+-- HeidiSQL Version:             11.2.0.6213
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+-- Dumping database structure for database-1933337
+CREATE DATABASE IF NOT EXISTS `database-1933337` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+USE `database-1933337`;
+
+-- Dumping structure for table database-1933337.customers
+CREATE TABLE IF NOT EXISTS `customers` (
+  `customer_id` char(36) NOT NULL DEFAULT uuid(),
+  `firstname` char(50) NOT NULL DEFAULT '',
+  `lastname` char(50) NOT NULL DEFAULT '',
+  `address` varchar(25) NOT NULL,
+  `city` varchar(25) NOT NULL,
+  `province` varchar(25) NOT NULL,
+  `postalcode` varchar(7) NOT NULL,
+  `customer_login` varchar(12) NOT NULL,
+  `customer_password` varchar(255) NOT NULL,
+  `Date_Created` date DEFAULT current_timestamp(),
+  `Date_Modified` date DEFAULT current_timestamp(),
+  PRIMARY KEY (`customer_id`),
+  UNIQUE KEY `customer_login` (`customer_login`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Dumping data for table database-1933337.customers: ~3 rows (approximately)
+/*!40000 ALTER TABLE `customers` DISABLE KEYS */;
+INSERT INTO `customers` (`customer_id`, `firstname`, `lastname`, `address`, `city`, `province`, `postalcode`, `customer_login`, `customer_password`, `Date_Created`, `Date_Modified`) VALUES
+	('2e9be67e-a6df-11eb-a825-9078415069cc', 'Shaun', 'Sobers', '101 Bellefeuille', 'Chateauguay', 'Quebec', 'J6J0A9', 'shaun_sobers', '$2y$10$LUEuaYXM2uVZqR4SVe4koOXkfNPcBZQggOV9aDeSkP2UmHGa5WFiG', '2021-04-28', '2021-04-28');
+/*!40000 ALTER TABLE `customers` ENABLE KEYS */;
+
+-- Dumping structure for procedure database-1933337.Customer_Add
+DELIMITER //
+CREATE PROCEDURE `customer_add`(
+	IN `P_customer_fname` CHAR(50),
+	IN `P_customer_lname` CHAR(50),
+	IN `P_customer_address` VARCHAR(50),
+	IN `P_customer_city` VARCHAR(50),
+	IN `P_customer_province` VARCHAR(50),
+	IN `P_customer_postalcode` VARCHAR(50),
+	IN `P_customer_login` VARCHAR(50),
+	IN `P_customer_password` VARCHAR(50)
+)
+BEGIN
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to add customer into customer table
+
+INSERT INTO customers
+(customers.firstname, customers.lastname, customers.address, customers.city, customers.province, customers.postalcode, customers.customer_login, customers.customer_password)
+
+VALUES (P_customer_fname, P_customer_lname, P_customer_address, P_customer_city, P_customer_province, P_customer_postalcode, P_customer_login, P_customer_password);
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure database-1933337.Customer_Delete
+DELIMITER //
+CREATE PROCEDURE `customer_delete`(
+	IN `P_customer_id` VARCHAR(50)
+)
+BEGIN
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to delete a customer from the customer table
+
+DELETE FROM customers
+WHERE customers.customer_id = P_customer_id;
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure database-1933337.Customer_Login
+DELIMITER //
+CREATE PROCEDURE `Customer_Login`(
+	IN `P_customer_login` VARCHAR(50)
+)
+BEGIN
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to retrieve information given a customer login
+
+SELECT customers.customer_id, customers.customer_password
+FROM customers
+
+WHERE customers.customer_login = P_customer_login;
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure database-1933337.Customer_Select
+DELIMITER //
+CREATE PROCEDURE `customer_select`(
+	IN `P_customer_id` VARCHAR(50)
+)
+BEGIN
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to select a specific customer given the customer id
+
+	Select
+
+
+	customers.firstname, 
+	customers.lastname,
+	customers.address,
+	customers.city,
+	customers.province,
+	customers.postalcode,
+	customers.customer_login,
+	customers.customer_password,
+	customers.customer_id
+	
+	FROM customers
+	
+	WHERE customers.customer_id= P_customer_id;
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure database-1933337.Customer_SelectAll
+DELIMITER //
+CREATE PROCEDURE `customer_selectall`()
+BEGIN
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to select and retrieve all rows of customers table
+Select
+
+	customers.firstname,
+	customers.lastname,
+	customers.address,
+	customers.city,
+	customers.province,
+	customers.postalcode,
+	customers.customer_login,
+	customers.customer_password,
+	customers.customer_id
+	
+	FROM customers
+	ORDER BY customers.customer_id;
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure database-1933337.Customer_SelectPurchase
+DELIMITER //
+CREATE PROCEDURE `customer_selectpurchase`(
+	IN `P_customer_id` VARCHAR(50),
+	IN `P_Date` DATE
+)
+BEGIN
+
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to retrieve all the purchases from a specific customer id
+	Select
+
+purchases.Purchase_ID, purchases.customer_id, purchases.Product_ID, purchases.Purchase_Quantity, purchases.Purchase_Comments, purchases.Purchase_Price, purchases.Purchase_Taxes, purchases.Purchase_Subtotal, purchases.Purchase_GrandTotal,
+customers.firstname, customers.lastname, customers.city
+	
+	FROM purchases
+	INNER JOIN customers
+	ON purchases.customer_id = customers.customer_id
+	
+WHERE (customers.customer_id = P_customer_id) AND (Purchase_Date>= P_Date OR P_Date IS NULL)
+ORDER BY Purchase_Date DESC;
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure database-1933337.Customer_Update
+DELIMITER //
+CREATE PROCEDURE `customer_update`(
+	IN `P_customer_fname` CHAR(50),
+	IN `P_customer_lname` CHAR(50),
+	IN `P_customer_address` VARCHAR(50),
+	IN `P_customer_city` VARCHAR(50),
+	IN `P_customer_province` VARCHAR(50),
+	IN `P_customer_postalcode` VARCHAR(50),
+	IN `P_customer_login` VARCHAR(50),
+	IN `P_customer_password` VARCHAR(50),
+	IN `P_customer_id` VARCHAR(50)
+)
+BEGIN
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to update a customer from customer table
+
+UPDATE customers
+	Set
+
+	customers.firstname = P_customer_fname,
+	customers.lastname = P_customer_lname,
+	customers.address = P_customer_address,
+	customers.city= P_customer_city,
+	customers.province = P_customer_province,
+	customers.postalcode = P_customer_postalcode,
+	customers.customer_login = P_customer_login,
+	customers.customer_password = P_customer_password,
+	customers.Date_Modified = CURRENT_TIMESTAMP
+	
+	WHERE customers.customer_id= P_customer_id;
+END//
+DELIMITER ;
+
+-- Dumping structure for table database-1933337.products
+CREATE TABLE IF NOT EXISTS `products` (
+  `product_id` varchar(12) NOT NULL DEFAULT uuid(),
+  `product_code` varchar(12) NOT NULL,
+  `product_description` varchar(100) NOT NULL,
+  `product_price` int(11) DEFAULT NULL,
+  `Date_Created` date DEFAULT current_timestamp(),
+  `Date_Modified` date DEFAULT current_timestamp(),
+  PRIMARY KEY (`product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Dumping data for table database-1933337.products: ~32 rows (approximately)
+/*!40000 ALTER TABLE `products` DISABLE KEYS */;
+INSERT INTO `products` (`product_id`, `product_code`, `product_description`, `product_price`, `Date_Created`, `Date_Modified`) VALUES
+	('1acc29e1-a60', 'P15', 'Jacksonville Jaguars Package', 100, '2021-04-28', '2021-04-28'),
+	('45359f98-a60', 'P31', 'Tennessee Titans Package', 100, '2021-04-28', '2021-04-28'),
+	('87921dc6-a60', 'P5', 'Carolina Panthers Package', 100, '2021-04-28', '2021-04-28'),
+	('97ee0c44-a60', 'P13', 'Houston Texans Package', 100, '2021-04-28', '2021-04-28'),
+	('9d04318e-a60', 'P17', 'Los Angeles Chargers Package', 100, '2021-04-28', '2021-04-28'),
+	('9e587700-a60', 'P2', 'Atlanta Falcons Package', 100, '2021-04-28', '2021-04-28'),
+	('9fe4a381-a60', 'P22', 'New England Patriots Package', 100, '2021-04-28', '2021-04-28'),
+	('a018a3be-a60', 'P25', 'New York Jets Package', 100, '2021-04-28', '2021-04-28'),
+	('a04fae73-a60', 'P16', 'Kansas City Chiefs Package', 100, '2021-04-28', '2021-04-28'),
+	('a083d598-a60', 'P27', 'Pittsburgh Steelers Package', 100, '2021-04-28', '2021-04-28'),
+	('a13d8b9a-a60', 'P6', 'Chicago Bears Package', 100, '2021-04-28', '2021-04-28'),
+	('a3970739-a60', 'P30', 'Tampa Bay Buccaneers Package', 100, '2021-04-28', '2021-04-28'),
+	('a3aef607-a60', 'P32', 'Washington Football Team Package', 100, '2021-04-28', '2021-04-28'),
+	('a3c75298-a60', 'P3', 'Baltimore Ravens Package', 100, '2021-04-28', '2021-04-28'),
+	('a3dd9ba3-a60', 'P4', 'Buffalo Bills Package', 100, '2021-04-28', '2021-04-28'),
+	('a3f21335-a60', 'P7', 'Cincinnati Bengals Package', 100, '2021-04-28', '2021-04-28'),
+	('a405d2a7-a60', 'P8', 'Cleveland Browns Package', 100, '2021-04-28', '2021-04-28'),
+	('a415ec66-a60', 'P10', 'Denver Broncos Package', 100, '2021-04-28', '2021-04-28'),
+	('a4276b38-a60', 'P14', 'Indianapolis Colts Package', 100, '2021-04-28', '2021-04-28'),
+	('a43f2652-a60', 'P29', 'Seattle Seahawks Package', 100, '2021-04-28', '2021-04-28'),
+	('a44f6b94-a60', 'P28', 'San Francisco 49ers Package', 100, '2021-04-28', '2021-04-28'),
+	('a463ce81-a60', 'P9', 'Dallas Cowboys Package', 100, '2021-04-28', '2021-04-28'),
+	('a47b5489-a60', 'P11', 'Detroit Lions Package', 100, '2021-04-28', '2021-04-28'),
+	('a4926c61-a60', 'P12', 'Green Bay Packers Package', 100, '2021-04-28', '2021-04-28'),
+	('a4ad446a-a60', 'P18', 'Los Angeles Rams Package', 100, '2021-04-28', '2021-04-28'),
+	('a4eb0c05-a60', 'P21', 'Minnesota Vikings Package', 100, '2021-04-28', '2021-04-28'),
+	('a515503f-a60', 'P23', 'New Orleans Saints Package', 100, '2021-04-28', '2021-04-28'),
+	('a5567be3-a60', 'P24', 'New York Giants Package', 100, '2021-04-28', '2021-04-28'),
+	('a69cc9b2-a60', 'P20', 'Miami Dolphins Package', 100, '2021-04-28', '2021-04-28'),
+	('a6e12aeb-a60', 'P26', 'Philadelphia Eagles Package', 100, '2021-04-28', '2021-04-28'),
+	('caf3b2cf-a60', 'P19', 'Los Vegas Raiders', 100, '2021-04-28', '2021-04-28'),
+	('d77a8317-a60', 'P1', 'Arizona Cardinals Package', 100, '2021-04-28', '2021-04-28');
+/*!40000 ALTER TABLE `products` ENABLE KEYS */;
+
+-- Dumping structure for procedure database-1933337.Product_Add
+DELIMITER //
+CREATE PROCEDURE `product_add`(
+	IN `P_Product_code` VARCHAR(50),
+	IN `P_Product_desc` VARCHAR(50),
+	IN `P_Product_price` INT
+)
+BEGIN
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to add a product into products table
+
+INSERT INTO products
+(products.product_code, products.product_description, products.product_price)
+VALUES(P_Product_code, P_Product_desc, P_Product_price);
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure database-1933337.Product_Delete
+DELIMITER //
+CREATE PROCEDURE `product_delete`(
+	IN `P_Product_id` VARCHAR(50)
+)
+BEGIN
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to delete a product given a specific product id;
+
+DELETE FROM products
+WHERE products.product_id = P_Product_id;
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure database-1933337.Product_Select
+DELIMITER //
+CREATE PROCEDURE `product_select`(
+	IN `P_product_id` VARCHAR(50)
+)
+BEGIN
+
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to select a specific product, given the product id;
+
+SELECT
+products.product_id, products.product_code, products.product_description, products.product_price
+FROM products
+
+WHERE products.product_id = P_product_id;
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure database-1933337.Product_SelectAll
+DELIMITER //
+CREATE PROCEDURE `product_selectall`()
+BEGIN
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to select all products from product table
+SELECT
+products.product_id, products.product_code, products.product_description, products.product_price
+FROM products;
+END//
+DELIMITER ;
+
+-- Dumping structure for table database-1933337.purchases
+CREATE TABLE IF NOT EXISTS `purchases` (
+  `Purchase_ID` varchar(50) NOT NULL DEFAULT uuid(),
+  `customer_id` char(36) NOT NULL DEFAULT uuid(),
+  `Product_ID` varchar(12) NOT NULL,
+  `Purchase_Price` float NOT NULL DEFAULT 0,
+  `Purchase_Taxes` float NOT NULL DEFAULT 0,
+  `Purchase_Subtotal` float NOT NULL DEFAULT 0,
+  `Purchase_GrandTotal` float NOT NULL DEFAULT 0,
+  `Purchase_Quantity` int(11) NOT NULL,
+  `Purchase_Comments` varchar(500) DEFAULT NULL,
+  `Purchase_Date` date DEFAULT current_timestamp(),
+  `Modified_Date` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`Purchase_ID`),
+  KEY `Customer_ID` (`customer_id`),
+  KEY `Product_ID` (`Product_ID`),
+  CONSTRAINT `Product_ID` FOREIGN KEY (`Product_ID`) REFERENCES `products` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Dumping data for table database-1933337.purchases: ~8 rows (approximately)
+/*!40000 ALTER TABLE `purchases` DISABLE KEYS */;
+INSERT INTO `purchases` (`Purchase_ID`, `customer_id`, `Product_ID`, `Purchase_Price`, `Purchase_Taxes`, `Purchase_Subtotal`, `Purchase_GrandTotal`, `Purchase_Quantity`, `Purchase_Comments`, `Purchase_Date`, `Modified_Date`) VALUES
+	('22b9b29f-aa39-11eb-a825-9078415069cc', '2e9be67e-a6df-11eb-a825-9078415069cc', 'a3dd9ba3-a60', 50, 10, 10, 10, 10, 'Test', '2021-05-01', '2021-05-01 00:51:47'),
+	('26b9fcdd-a6e2-11eb-a825-9078415069cc', '2e9be67e-a6df-11eb-a825-9078415069cc', 'a4276b38-a60', 0, 0, 0, 0, 10, 'Thanks', '2021-04-26', '2021-04-26 00:00:00'),
+	('60192504-aa39-11eb-a825-9078415069cc', '2e9be67e-a6df-11eb-a825-9078415069cc', 'a3dd9ba3-a60', 10, 10, 10, 10, 10, 'test', '2021-05-01', '2021-05-01 00:53:30'),
+	('62b25205-a781-11eb-a825-9078415069cc', '2e9be67e-a6df-11eb-a825-9078415069cc', '9fe4a381-a60', 0, 0, 0, 0, 24, 'Finally', '2021-04-27', '2021-04-27 13:52:26');
+/*!40000 ALTER TABLE `purchases` ENABLE KEYS */;
+
+-- Dumping structure for procedure database-1933337.Purchase_Add
+DELIMITER //
+CREATE PROCEDURE `purchase_add`(
+	IN `P_customer_id` VARCHAR(50),
+	IN `P_product_id` VARCHAR(50),
+	IN `P_purchase_quantity` INT,
+	IN `P_purchase_comments` VARCHAR(50),
+	IN `P_purchase_price` INT,
+	IN `P_purchase_tax` INT,
+	IN `P_purchase_subtotal` INT,
+	IN `P_purchase_grandtotal` INT
+)
+BEGIN
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to add purchase into purchase table
+
+INSERT INTO purchases
+(purchases.customer_id, purchases.Product_ID, purchases.Purchase_Quantity, purchases.Purchase_Comments, purchases.Purchase_Price, purchases.Purchase_Taxes, purchases.Purchase_Subtotal, purchases.Purchase_GrandTotal)
+
+VALUES
+(P_customer_id, P_product_id, P_purchase_quantity, P_purchase_comments, P_purchase_price, P_purchase_tax, P_purchase_subtotal, P_purchase_grandtotal);
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure database-1933337.Purchase_Delete
+DELIMITER //
+CREATE PROCEDURE `purchase_delete`(
+	IN `p_purchase_id` VARCHAR(50)
+)
+BEGIN
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to delete a purchase from purchases table, given a specific purchase id
+
+DELETE FROM purchases WHERE purchases.Purchase_ID = p_purchase_id;
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure database-1933337.Purchase_Select
+DELIMITER //
+CREATE PROCEDURE `purchase_select`(
+	IN `P_Purchase_ID` VARCHAR(50)
+)
+BEGIN
+
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to select a purchase from purchase table, given a specifc purchase id
+
+SELECT purchases.Purchase_ID, purchases.customer_id , purchases.Product_ID, purchases.Purchase_Quantity, purchases.Purchase_Comments, purchases.Purchase_Date
+FROM purchases
+WHERE purchases.Purchase_ID = P_Purchase_ID;
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure database-1933337.Purchase_SelectAll
+DELIMITER //
+CREATE PROCEDURE `purchase_selectall`()
+BEGIN
+
+# Created by Shaun Sobers (1933337)
+# Created 04/27/2021
+# Procedure created to select all purchases from purchases table;
+
+SELECT purchases.Purchase_ID, purchases.customer_id , purchases.Product_ID, purchases.Purchase_Quantity, purchases.Purchase_Comments, purchases.Date
+FROM purchases
+ORDER BY purchases.Date;
+END//
+DELIMITER ;
+
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
